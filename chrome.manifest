@@ -1,0 +1,3 @@
+content	leprapanel2	chrome/content/
+overlay	chrome://browser/content/browser.xul	chrome://leprapanel2/content/leprapanel2.xul
+skin	leprapanel2	classic/1.0	chrome/skin/
