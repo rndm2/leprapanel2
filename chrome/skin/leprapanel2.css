@@ -1,55 +1,49 @@
-#LepraPanel2-StatusbarMenu,
+#LepraPanel2-BarMenu,
 #LepraPanel2-NavigateMenu { 
     background-color: #f1f1f1;
     padding: 2px;
     border: 1px solid #c0c0c0;
 }
 
-#LepraPanel2-Statusbar {
-	margin: 0 3px;
+#LepraPanel2-Bar {
+    margin: 0 3px;	
 }
 
-#LepraPanel2-Statusbar spacer.separator {
+#LepraPanel2-Bar spacer.separator {
     border-right: 1px solid ThreeDHighlight;
     border-left: 1px solid ThreeDShadow;
     width: 2px;
-    height: 14px;
     margin: 2px 5px;
 }
 
-#LepraPanel2-Statusbar spacer.inner-separator {
+#LepraPanel2-Bar spacer.inner-separator {
     width: 3px;
 }
 
-#LepraPanel2-Statusbar label {
-    padding: 0px;
+#LepraPanel2-Bar label {
+    padding: 1px 0 0;
     margin: 0px;
 }
 
-#LepraPanel2-Statusbar label[name="username"] {
+#LepraPanel2-Bar label[name="username"] {
     color: #0080c0;
     font-weight: bold;
 }
 
-
-#LepraPanel2-Statusbar > hbox {
-    margin-top: -2px;
-}
-
-#LepraPanel2-Statusbar [popup],
-#LepraPanel2-Statusbar [data-href] {
+#LepraPanel2-Bar [popup],
+#LepraPanel2-Bar [data-href] {
 	cursor: pointer;
 }
 
-#LepraPanel2-Statusbar label[name="stuff"],
-#LepraPanel2-Statusbar label[name="inbox"] {
-    padding: 0 3px;
+#LepraPanel2-Bar label[name="stuff"],
+#LepraPanel2-Bar label[name="inbox"] {
+    padding: 1px 3px 0;
 }
 
-#LepraPanel2-Statusbar label[name="inbox"] {
+#LepraPanel2-Bar label[name="inbox"] {
 	padding-right: 0;
 }
 
-#LepraPanel2-Statusbar #LepraPanel2-persist-box2 image:last-of-type {
-    margin-top: 1px;
+#LepraPanel2-Bar #LepraPanel2-hbox-stuff image:last-of-type {
+    margin-top: 2px;
 }

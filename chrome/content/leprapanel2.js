@@ -41,19 +41,19 @@
 			],
 			layout: {
 				blocks: {
-					statusBar: '#LepraPanel2-Statusbar',
-					greetingBox: '#LepraPanel2-Statusbar #LepraPanel2-hbox-greeting',
-					ratingBox: '#LepraPanel2-Statusbar #LepraPanel2-hbox-rating',
-					stuffBox: '#LepraPanel2-Statusbar #LepraPanel2-hbox-stuff',
+					statusBar: '.LepraPanel2-Holder',
+					greetingBox: '.LepraPanel2-Holder #LepraPanel2-hbox-greeting',
+					ratingBox: '.LepraPanel2-Holder #LepraPanel2-hbox-rating',
+					stuffBox: '.LepraPanel2-Holder #LepraPanel2-hbox-stuff',
 					forLogged: '.LepraPanel2-Holder .for-logged',
 					forNotLogged: '.LepraPanel2-Holder .for-not-logged',
 					names: '.LepraPanel2-Holder [name="%s"]'
 				},
 				elements: {
-					karma: '#LepraPanel2-Statusbar #LepraPanel2-persist-karma-image',
-					rating: '#LepraPanel2-Statusbar #LepraPanel2-persist-rating-image',
-					stuff: '#LepraPanel2-Statusbar #LepraPanel2-persist-stuff-image',
-					inbox: '#LepraPanel2-Statusbar #LepraPanel2-persist-inbox-image'
+					karma: '.LepraPanel2-Holder #LepraPanel2-persist-karma-image',
+					rating: '.LepraPanel2-Holder #LepraPanel2-persist-rating-image',
+					stuff: '.LepraPanel2-Holder #LepraPanel2-persist-stuff-image',
+					inbox: '.LepraPanel2-Holder #LepraPanel2-persist-inbox-image'
 				},
 				images: {
 					minus: "chrome://leprapanel2/skin/bullet-minus.png",
@@ -140,9 +140,9 @@
 	}
 
 	Lpr2Bridge.prototype._prepareUI = function() {
-		$(this.config.layout.blocks.greetingBox)[0].hidden = !this.settings.greeting;
-		$(this.config.layout.blocks.ratingBox)[0].hidden = !this.settings.checkRatings;
-		$(this.config.layout.blocks.stuffBox)[0].hidden = !this.settings.checkStuff;
+		$(this.config.layout.blocks.greetingBox).attr('hidden', !this.settings.greeting);
+		$(this.config.layout.blocks.ratingBox).attr('hidden', !this.settings.checkRatings);
+		$(this.config.layout.blocks.stuffBox).attr('hidden', !this.settings.checkStuff);
 	}
 
 	Lpr2Bridge.prototype._getSession = function() {

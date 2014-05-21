@@ -8,7 +8,7 @@
 
 	<window id="main-window">
 		<popupset class="LepraPanel2-Holder">
-			<popup id="LepraPanel2-NavigateMenu" position="before_end">
+			<popup id="LepraPanel2-NavigateMenu" position="after_start">
 				<menuitem 
 				    label="Глагне"
 				    tooltiptext="Перейти на Глагне"
@@ -81,7 +81,7 @@
 					</menupopup>
 				</menu>
 			</popup>
-			<popup id="LepraPanel2-StatusbarMenu" position="before_end">
+			<popup id="LepraPanel2-BarMenu" position="after_start">
 				<menuitem
 					hidden="true"
 					label="Обновить данные"
@@ -99,23 +99,25 @@
 			</popup>
 		</popupset>
 	</window>
-	<statusbar id="status-bar">
-		<statusbarpanel id="LepraPanel2-Statusbar" class="LepraPanel2-Holder">
+	<toolbarpalette id="BrowserToolbarPalette">
+		<toolbaritem id="LepraPanel2-Bar" class="LepraPanel2-Holder">
 			<hbox id="LepraPanel2-hbox-greeting">
 				<hbox align="center">
-					<label class="for-not-logged" value="Не залогинен" />
-					<label class="for-logged" value="Привет, " />
-					<label id="LepraPanel2-persist-username" class="for-logged" name="username" value="" persist="value" />
+					<label id="LepraPanel2-persist-not-logged" class="for-not-logged" value="Не залогинен" hidden="true" persist="hidden" />
+					<label id="LepraPanel2-persist-hello" class="for-logged" value="Привет, " hidden="true" persist="hidden" />
+					<label id="LepraPanel2-persist-username" class="for-logged" name="username" value="" hidden="true" persist="value hidden" />
 				</hbox>
                 <spacer class="separator" />
 			</hbox>
-			<hbox>
-                <image
-                    width="16" height="16"
-                    src="chrome://leprapanel2/skin/logo16.png"
-                    tooltiptext="Навигация"
-                    popup="LepraPanel2-NavigateMenu"
-                    context="LepraPanel2-StatusbarMenu" />
+			<hbox id="LepraPanel2-hbox-logo">
+                <hbox align="center">
+                    <image
+                        width="16" height="16"
+	                    src="chrome://leprapanel2/skin/logo16.png"
+	                    tooltiptext="Навигация"
+	                    popup="LepraPanel2-NavigateMenu"
+	                    context="LepraPanel2-BarMenu" />
+                    </hbox>
             </hbox>            
 			<hbox id="LepraPanel2-hbox-rating" class="for-logged" hidden="true" persist="hidden">
 				<spacer class="separator" />
@@ -162,6 +164,6 @@
 					<label hidden="true" id="LepraPanel2-persist-inbox" tooltiptext="Инбокс" name="inbox" value="" persist="value hidden" />
 				</hbox>
 			</hbox>
-		</statusbarpanel>
-	</statusbar>
+		</toolbaritem>
+	</toolbarpalette>
 </overlay>
