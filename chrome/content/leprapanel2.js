@@ -1,4 +1,24 @@
-(function($) {
+(function($, window, document) {
+	var Lpr2 = function() {
+		this._scripts = [];
+		this._enabled = {};
+	}
+	
+	Lpr2.prototype.init = function(list) {
+		for (var i in list) {
+			if (!list.hasOwnProperty(i) || i.search('userscripts.') == -1) continue;
+			this._enabled[i.replace('userscripts.', '')] = list[i];
+		}
+	}
+	
+	Lpr2.prototype.serve = function(doc) {
+		for (var i = 0; i < this._scripts.length; i++) {
+			var script = this._scripts[i];
+			if (this._enabled[script.name] && this._enabled[script.name] == true && script.include.test(doc.location.href)) {
+				script.run(doc, $);
+			}
+		}
+	}
 	
 	var Lpr2Bridge = function() {
 		
@@ -7,11 +27,19 @@
 		this._cookieService = undefined;
 		this._ioService = undefined;
 		
+		this._lpr2Instance = new Lpr2();
+		
 		this._timer = undefined;
+		
+		this._ready = {
+			ui: false,
+			uiAuth: false
+		}
 		
 		this.settings = {};
 		
 		this.user = {
+			changed: true,
 			logged: false,
 			uid: undefined,
 			sid: undefined,
@@ -29,8 +57,12 @@
 		this.config = {
 			id: 'leprapanel2@random.net.ua',
 			url: {
-				home: "http://leprosorium.ru/",
-				api: "http://leprosorium.ru/api/lepropanel"
+				home: 'https://leprosorium.ru/',
+				api: 'https://leprosorium.ru/api/lepropanel',
+				users: 'https://leprosorium.ru/users/'
+			},
+			pattern: {
+				
 			},
 			dataKeys: [
 			    'username',
@@ -41,7 +73,7 @@
 			],
 			layout: {
 				blocks: {
-					statusBar: '.LepraPanel2-Holder',
+					bar: '#LepraPanel2-Bar',
 					greetingBox: '.LepraPanel2-Holder #LepraPanel2-hbox-greeting',
 					ratingBox: '.LepraPanel2-Holder #LepraPanel2-hbox-rating',
 					stuffBox: '.LepraPanel2-Holder #LepraPanel2-hbox-stuff',
@@ -50,6 +82,7 @@
 					names: '.LepraPanel2-Holder [name="%s"]'
 				},
 				elements: {
+					profile: '.LepraPanel2-Holder #LepraPanel2-NavigateMenu [image$="user.png"]',
 					karma: '.LepraPanel2-Holder #LepraPanel2-persist-karma-image',
 					rating: '.LepraPanel2-Holder #LepraPanel2-persist-rating-image',
 					stuff: '.LepraPanel2-Holder #LepraPanel2-persist-stuff-image',
@@ -72,20 +105,21 @@
 		this._observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 		this._cookieService = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
 		this._ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-
-		this._runLevel0();
-		this._runLevel1();
-		this._runLevel2();
-	}
-	
-	Lpr2Bridge.prototype._runLevel0 = function() {
+		
 		this._loadPreferences();
-		this._prepareUI();
-	}
-	
-	Lpr2Bridge.prototype._runLevel1 = function() {
+
+		this._lpr2Instance.init(this.settings);
+		
 		this._getSession();
-		this._checkSession();
+		this._runLevel0();
+
+		this._registerObservers();	
+		this._addEventListener();
+
+	}
+
+	Lpr2Bridge.prototype._runLevel0 = function() {
+		this._prepareUI();
 		if (this.user.logged) {
 			this._getLocalData();
 			this._getRemoteData(true);
@@ -93,34 +127,6 @@
 		}
 	}
 	
-	Lpr2Bridge.prototype._runLevel2 = function() {
-		this._registerObservers();	
-	}
-
-	Lpr2Bridge.prototype._registerObservers = function() {
-	    this._preferencesService.QueryInterface(Components.interfaces.nsIPrefBranch2);
-	    this._preferencesService.addObserver('', this, false);
-	    this._preferencesService.QueryInterface(Components.interfaces.nsIPrefBranch);
-	    this._observerService.addObserver(this, "cookie-changed", null);
-	},
-	
-	Lpr2Bridge.prototype._unregisterObservers = function() {
-		this._preferencesService.removeObserver("", this);
-		this._observerService.removeObserver(this, "cookie-changed");
-	},
-	
-	Lpr2Bridge.prototype.observe = function(aSubject, aTopic, aData) {
-		switch(aTopic) {
-			case 'cookie-changed':
-				this._runLevel0();
-				this._runLevel1();
-				break;
-			case 'nsPref:changed':
-				this._runLevel0();
-				break;
-		}
-	},
-	  
 	Lpr2Bridge.prototype._loadPreferences = function() {
 		var list = this._preferencesService.getChildList("");
 		for (var i = 0; i < list.length; i++) {
@@ -139,12 +145,6 @@
 		if (this.settings.checkPeriod <= 0) this.settings.checkPeriod = 5;
 	}
 
-	Lpr2Bridge.prototype._prepareUI = function() {
-		$(this.config.layout.blocks.greetingBox).attr('hidden', !this.settings.greeting);
-		$(this.config.layout.blocks.ratingBox).attr('hidden', !this.settings.checkRatings);
-		$(this.config.layout.blocks.stuffBox).attr('hidden', !this.settings.checkStuff);
-	}
-
 	Lpr2Bridge.prototype._getSession = function() {
 		var uri = this._ioService.newURI(this.config.url.home, null, null);
 		var cookie = this._cookieService.getCookieString(uri, null);
@@ -155,19 +155,46 @@
 			sid = cookie.match(/sid=([A-Za-z0-9]+)/);
 		}
 		if (uid && sid && uid[1] && sid[1]) {
-			this.user.logged = true;
-			this.user.uid = uid[1];
-			this.user.sid = sid[1];
+			if (this.user.uid != uid[1] || this.user.sid != sid[1]) {
+				this._ready.uiAuth = false;
+				this.user.logged = true;
+				this.user.changed = true;
+				this.user.uid = uid[1];
+				this.user.sid = sid[1];
+			} else {
+				this.user.changed = false;
+			}
 		} else {
+			this._ready.uiAuth = false;
+			this.user.changed = true;
 			this.user.logged = false;
 		}
 	}
-
-	Lpr2Bridge.prototype._checkSession = function() {
-		$(this.config.layout.blocks.forLogged).attr('hidden', !this.user.logged);
-		$(this.config.layout.blocks.forNotLogged).attr('hidden', !!this.user.logged);
-	}
 	
+	Lpr2Bridge.prototype._prepareUI = function() {
+		var barVisible = $(this.config.layout.blocks.bar).length > 0;
+		
+		if (this._ready.uiAuth != true && barVisible == true) {
+			$(this.config.layout.blocks.forLogged).attr('hidden', !this.user.logged);
+			$(this.config.layout.blocks.forNotLogged).attr('hidden', !!this.user.logged);
+			this._ready.uiAuth = true;
+		}
+		
+		if (this._ready.ui != true && barVisible == true && this.user.logged == true) {
+			$(this.config.layout.blocks.greetingBox).attr('hidden', !this.settings.greeting);
+			$(this.config.layout.blocks.ratingBox).attr('hidden', !this.settings.checkRatings);
+			$(this.config.layout.blocks.stuffBox).attr('hidden', !this.settings.checkStuff);
+			this._ready.ui = true;
+		}
+		
+		if (this.user.username) {
+			var $profile = $(this.config.layout.elements.profile);
+			if ($profile.attr('data-href').length == 0) {
+				$profile.attr('data-href', this.config.url.users + this.user.username);	
+			}
+		}
+	}
+
 	Lpr2Bridge.prototype._getLocalData = function() {
 		var keys = this.config.dataKeys;
 		var $el;
@@ -199,25 +226,27 @@
 				}
 				if (keys[i] == 'stuff' || keys[i] == 'inbox') {
 					$(this.config.layout.elements[keys[i]]).attr('src', this.user[keys[i]] == '' ? this.config.layout.images[keys[i]] : this.config.layout.images[keys[i] + 'Active']);
+					$el.attr('hidden', this.user[keys[i]] == '');
 				}
-				$el.attr('hidden', this.user[keys[i]] == '').val(this.user[keys[i]]);
+				$el.val(this.user[keys[i]]);
 			}
 		}
 	}
 
 	Lpr2Bridge.prototype._getRemoteData = function(full) {
 		var _this = this;
-		console.log('Called');
-		$.getJSON(this.config.url.api, function(answer) {
+		
+		var answerHandler = function(answer) {
 			_this._writeData(answer);
 			_this._setLocalData();
-		});
+			_this._prepareUI();
+		};
+		
+		$.getJSON(this.config.url.api, answerHandler);
+		
 		if (full) {
-			$.getJSON(this.config.url.api + '/' + this.user.uid, function(answer) {
-				_this._writeData(answer);
-				_this._setLocalData();
-			});	
-		}
+			$.getJSON(this.config.url.api + '/' + this.user.uid, answerHandler);	
+		};
 	}
 	
 	Lpr2Bridge.prototype._writeData = function(data) {
@@ -244,9 +273,14 @@
 	}
 	
 	Lpr2Bridge.prototype._schedule = function(e) {
-		if (this.user.logged != true || (this.settings.checkRatings != true && this.settings.checkStuff)) return false;
 		var _this = this;
+		
 		clearInterval(this._timer);
+		
+		if (this.user.logged != true || (this.settings.checkRatings != true && this.settings.checkStuff != true)) {
+			return false;
+		}
+		
 		this._timer = setInterval(function() {
 			_this._getRemoteData();
 		}, this.settings.checkPeriod * 60 * 1000);
@@ -267,6 +301,87 @@
 		this._getRemoteData(true);
 	}
 	
+	Lpr2Bridge.prototype._registerObservers = function() {
+		var _this = this;
+	    this._preferencesService.QueryInterface(Components.interfaces.nsIPrefBranch2);
+	    this._preferencesService.addObserver('', this, false);
+	    this._preferencesService.QueryInterface(Components.interfaces.nsIPrefBranch);
+	    this._observerService.addObserver(this, "cookie-changed", null);
+	    window.addEventListener("customizationchange", function(e) {
+	    	_this._onWindowCustomization(e);
+	    }, false);
+	}
+	
+	Lpr2Bridge.prototype._unregisterObservers = function() {
+		this._preferencesService.removeObserver("", this);
+		this._observerService.removeObserver(this, "cookie-changed");
+	}
+	
+	Lpr2Bridge.prototype._onWindowCustomization = function(e) {
+		var palette = e.target.palette;
+		var found = false;
+		if (palette && palette.children.length > 0) {
+			for (var i = 0; i < palette.children.length; i++) { 
+				if (palette.children[i].id.search(this.config.layout.blocks.bar.replace('#', '')) != -1) {
+					found = true;
+				}
+			}
+		}
+		if (found == false) {
+			this._ready.ui = false;
+			this._ready.uiAuth = false;
+			this._runLevel0();
+		}
+	}
+	
+	Lpr2Bridge.prototype.observe = function(aSubject, aTopic, aData) {
+		switch(aTopic) {
+			case 'cookie-changed':
+				this._getSession();
+				if (this.user.changed) {
+					this._runLevel0();
+				}
+				break;
+			case 'nsPref:changed':
+				this._loadPreferences();
+				if (aData.search('userscripts') != -1) {
+					this._lpr2Instance.init(this.settings);
+				} else {
+					this._ready.ui = false;
+					this._runLevel0();	
+				}				
+				break;
+		}
+	}
+	
+	Lpr2Bridge.prototype._addEventListener = function() {
+		var _this = this;
+		document.getElementById("appcontent").addEventListener("DOMContentLoaded", function(e) {
+			_this._onPageLoad(e);
+		}, true);
+	}
+	
+	Lpr2Bridge.prototype._onPageLoad = function(e) {
+		var doc = e.target;
+		if (doc instanceof HTMLDocument && !doc.defaultView.frameElement && doc.location.href) {
+			this._lpr2Instance.serve(doc);
+			if (this.settings.checkLepra) {
+				this._getStuffInboxFromHtml(doc);
+			}
+		}
+	}
+	
+	Lpr2Bridge.prototype._getStuffInboxFromHtml = function(doc) {
+		if (doc.location.href.search('//leprosorium.ru') == -1) return false;
+		var $stuff = $('#js-header_nav_my_things i', doc);
+		var $inbox = $('#js-header_nav_inbox i', doc);
+		if ($stuff.length > 0 && $inbox.length > 0) {
+			this.user.stuff = $stuff.html().replace('мои вещи ', '');
+			this.user.inbox = $inbox.html();
+			this._setLocalData();
+		}
+	}
+	
 	Lpr2Bridge.prototype.destroy = function() {
 		this._unregisterObservers();	
 	}
@@ -281,4 +396,4 @@
 		lpr2bridge.destroy();
 	}, false);
 
-})(Zepto);
+})(Zepto, window, document);

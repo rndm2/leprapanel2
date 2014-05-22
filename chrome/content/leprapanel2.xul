@@ -5,6 +5,9 @@
 
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/lib/zepto.min.js" />
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/leprapanel2.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/newComments.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/commentAndRatingFont.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/transparentImages.js" />
 
 	<window id="main-window">
 		<popupset class="LepraPanel2-Holder">
@@ -12,7 +15,7 @@
 				<menuitem 
 				    label="Глагне"
 				    tooltiptext="Перейти на Глагне"
-					data-href="http://leprosorium.ru"
+					data-href="https://leprosorium.ru"
 					oncommand="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/logo16.png"
                     class="menuitem-iconic" />
@@ -21,7 +24,7 @@
 				    hidden="true"
 				    label="Мои вещи"
 				    tooltiptext="Перейти в мои вещи"
-					data-href="http://leprosorium.ru/my"
+					data-href="https://leprosorium.ru/my"
 					oncommand="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/stuff.png"
 					class="menuitem-iconic for-logged" />
@@ -29,7 +32,7 @@
 				    hidden="true"
 				    label="Инбокс"
 				    tooltiptext="Перейти в инбокс"
-					data-href="http://leprosorium.ru/my/inbox"
+					data-href="https://leprosorium.ru/my/inbox"
 					oncommand="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/inbox.png"
 					class="menuitem-iconic for-logged" />
@@ -37,7 +40,7 @@
 				    hidden="true"
 					label="Избранное"
 					tooltiptext="Перейти в избранное"
-					data-href="http://leprosorium.ru/my/favourites"
+					data-href="https://leprosorium.ru/my/favourites"
 					oncommand="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/favourites.png"
 					class="menuitem-iconic for-logged" />
@@ -46,7 +49,7 @@
                     hidden="true"
 					label="Мой профайл"
 					tooltiptext="Перейти в мой профайл"
-					data-href="http://leprosorium.ru/users/"
+					data-href=""
 					oncommand="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/user.png"
 					class="menuitem-iconic for-logged" />
@@ -60,7 +63,7 @@
 						<menuitem
                             label="Написать пост"
 							tooltiptext="Написать новый пост"
-							data-href="http://leprosorium.ru/asylum"
+							data-href="https://leprosorium.ru/asylum"
 							oncommand="lpr2bridge.navigate(event)" />
 						<menuseparator />
 						<menuitem
@@ -71,12 +74,12 @@
 						<menuitem
                             label="Белый дом"
 							tooltiptext="Перейти в Белый дом"
-							data-href="http://leprosorium.ru/democracy"
+							data-href="https://leprosorium.ru/democracy"
 							oncommand="lpr2bridge.navigate(event)" />
 						<menuitem
                             label="Выборы ПГ"
 							tooltiptext="Пройти на выборы президента Грузии (ненастоящей)"
-							data-href="http://leprosorium.ru/elections/president"
+							data-href="https://leprosorium.ru/elections/president"
 							oncommand="lpr2bridge.navigate(event)" />
 					</menupopup>
 				</menu>
@@ -103,7 +106,7 @@
 		<toolbaritem id="LepraPanel2-Bar" class="LepraPanel2-Holder">
 			<hbox id="LepraPanel2-hbox-greeting">
 				<hbox align="center">
-					<label id="LepraPanel2-persist-not-logged" class="for-not-logged" value="Не залогинен" hidden="true" persist="hidden" />
+					<label id="LepraPanel2-persist-not-logged" class="for-not-logged" value="Не залогинен" persist="hidden" />
 					<label id="LepraPanel2-persist-hello" class="for-logged" value="Привет, " hidden="true" persist="hidden" />
 					<label id="LepraPanel2-persist-username" class="for-logged" name="username" value="" hidden="true" persist="value hidden" />
 				</hbox>
@@ -148,7 +151,7 @@
                         src="chrome://leprapanel2/skin/stuff.png" 
                         tooltiptext="Мои вещи"
                         persist="src"
-						data-href="http://leprosorium.ru/my/"
+						data-href="https://leprosorium.ru/my/"
 						onclick="lpr2bridge.navigate(event)" />
 					<label hidden="true" id="LepraPanel2-persist-stuff" tooltiptext="Мои вещи" name="stuff" value="" persist="value hidden" />
 					<spacer class="inner-separator" />
@@ -159,7 +162,7 @@
                         src="chrome://leprapanel2/skin/inbox.png"					
                         tooltiptext="Инбокс"
                         persist="src"
-						data-href="http://leprosorium.ru/my/inbox"
+						data-href="https://leprosorium.ru/my/inbox"
 						onclick="lpr2bridge.navigate(event)" />
 					<label hidden="true" id="LepraPanel2-persist-inbox" tooltiptext="Инбокс" name="inbox" value="" persist="value hidden" />
 				</hbox>

@@ -37,7 +37,7 @@
 
 #LepraPanel2-Bar label[name="stuff"],
 #LepraPanel2-Bar label[name="inbox"] {
-    padding: 1px 3px 0;
+	padding: 1px 3px 0;
 }
 
 #LepraPanel2-Bar label[name="inbox"] {
@@ -45,5 +45,5 @@
 }
 
 #LepraPanel2-Bar #LepraPanel2-hbox-stuff image:last-of-type {
-    margin-top: 2px;
+	margin-top: 2px;
 }

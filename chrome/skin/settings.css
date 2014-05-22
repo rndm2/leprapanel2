@@ -1,0 +1,20 @@
+#Userscript-About .author-box {
+	color: #666666;
+}
+
+#Userscript-About .author-box image {
+  	cursor: pointer;
+	margin-left: 5px;
+}
+
+#Userscript-About .text-link,
+#Userscript-About .text-link:visited,
+#Userscript-About .text-link:focus,
+#Userscript-About .text-link:active {
+	color: #333300 !important;
+	
+}
+
+#Userscript-About .text-link:hover {
+	color: #669999 !important;
+}
