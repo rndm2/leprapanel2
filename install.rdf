@@ -3,7 +3,7 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
     <Description about="urn:mozilla:install-manifest">
         <em:id>leprapanel2@random.net.ua</em:id>
-        <em:version>0.1</em:version>
+        <em:version>0.3</em:version>
         <em:type>2</em:type>
 
         <em:targetApplication>
@@ -17,7 +17,9 @@
         <em:name>LepraPanel2</em:name>
         <em:description>Навигационная панель для leprosorium.ru</em:description>
         <em:creator>random@random.net.ua</em:creator>
-        <em:contributor>random@random.net.ua</em:contributor>
+        <em:contributor>random2 https://leprosorium.ru/users/random2</em:contributor>
+        <em:contributor>Omen https://leprosorium.ru/users/Omen</em:contributor>
+        <em:contributor>vnizzz https://leprosorium.ru/users/vnizzz</em:contributor>
         <em:iconURL>chrome://leprapanel2/skin/logo32.png</em:iconURL>
         <em:updateURL>http://random.net.ua/leprapanel2/update.rdf</em:iconURL>
         <em:homepageURL>http://random.net.ua/leprapanel2</em:homepageURL>
