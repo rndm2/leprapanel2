@@ -58,7 +58,7 @@ lpr2userscript_commentAndRatingFont.prototype = {
 	    }
 
 	    function getRating(div) {
-	    	var r = div.childNodes[1].childNodes[5].childNodes[3].childNodes[3].innerHTML;
+	    	var r = $('.vote_result', div).text();
 	    	return parseInt(r, 10);
 	    }
 	}
