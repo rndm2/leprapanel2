@@ -3,7 +3,6 @@ var lpr2userscripts = {
 	about: function() {
 		var selected = document.getElementById("LepraPanel2-UserScript-List").selectedItem;
 		if (selected) {
-			console.log(selected.children[0]);
 			var name = selected.children[0].id.replace(/[\S]+[\-]/, '');
 			if (name) {
 				console.log(name);

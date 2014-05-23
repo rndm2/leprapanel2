@@ -9,3 +9,6 @@ pref("extensions.leprapanel2.userscripts.commentAndRatingFont", true);
 pref("extensions.leprapanel2.userscripts.newComments", true);
 pref("extensions.leprapanel2.userscripts.transparentImages", true);
 
+pref("extensions.leprapanel2.userscripts.commaToColon", false);
+pref("extensions.leprapanel2.userscripts.userNumbers", false);
+pref("extensions.leprapanel2.userscripts.leproTotalComments", false);

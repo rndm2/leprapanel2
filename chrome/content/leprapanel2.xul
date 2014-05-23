@@ -8,6 +8,9 @@
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/newComments.js" />
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/commentAndRatingFont.js" />
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/transparentImages.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/commaToColon.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/userNumbers.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/leproTotalComments.js" />
 
 	<window id="main-window">
 		<popupset class="LepraPanel2-Holder">

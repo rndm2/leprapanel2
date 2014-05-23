@@ -20,6 +20,10 @@
             <preference id="LepraPanel2-UserScripts-Pref-commentAndRatingFont" name="extensions.leprapanel2.userscripts.commentAndRatingFont" type="bool" />
             <preference id="LepraPanel2-UserScripts-Pref-newComments" name="extensions.leprapanel2.userscripts.newComments" type="bool" />
             <preference id="LepraPanel2-UserScripts-Pref-transparentImages" name="extensions.leprapanel2.userscripts.transparentImages" type="bool" />
+            
+            <preference id="LepraPanel2-UserScripts-Pref-commaToColon" name="extensions.leprapanel2.userscripts.commaToColon" type="bool" />
+            <preference id="LepraPanel2-UserScripts-Pref-userNumbers" name="extensions.leprapanel2.userscripts.userNumbers" type="bool" />
+            <preference id="LepraPanel2-UserScripts-Pref-leproTotalComments" name="extensions.leprapanel2.userscripts.leproTotalComments" type="bool" />
         </preferences>
 
         <description>Здесь мы стараемся собирать всякие скрипты, которые во множестве были написаны для Лепрозория юзерами, красиво обьединяя их в едином аддоне. Вам остается лишь поставить галочку возле тех, которые вам нужны.</description>
@@ -41,6 +45,25 @@
                     id="LepraPanel2-UserScripts-Checkbox-transparentImages"
                     label="Сделать картинки на главных полупрозрачными"
                     preference="LepraPanel2-UserScripts-Pref-transparentImages" />
+            </richlistitem>
+            
+            <richlistitem>
+                <checkbox
+                    id="LepraPanel2-UserScripts-Checkbox-commaToColon"
+                    label="Заменять запятую на двоеточие в ответах на комментарии (по старинке)"
+                    preference="LepraPanel2-UserScripts-Pref-commaToColon" />
+            </richlistitem>
+            <richlistitem>
+                <checkbox
+                    id="LepraPanel2-UserScripts-Checkbox-userNumbers"
+                    label="Показывать номер юзера возле юзернейма"
+                    preference="LepraPanel2-UserScripts-Pref-userNumbers" />
+            </richlistitem>
+            <richlistitem>
+                <checkbox
+                    id="LepraPanel2-UserScripts-Checkbox-leproTotalComments"
+                    label="Расширенный фильтр комментариев"
+                    preference="LepraPanel2-UserScripts-Pref-leproTotalComments" />
             </richlistitem>
         </richlistbox>
         <vbox align="right"><button label="подробнее о скрипте..." oncommand="lpr2userscripts.about()" /></vbox>
