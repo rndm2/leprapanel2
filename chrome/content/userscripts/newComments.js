@@ -6,75 +6,75 @@ lpr2userscript_newComments.prototype = {
 	
 	include: new RegExp(':\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru\/(comments\/\\d+|my\/inbox\/\\d+)'),
 	
-	run: function(doc, $) {
+	run: function(window, document, $) {
+		var currentPost = 0;
 		var navLinkNext;
 		var navLinkPrev;
-		var pp = doc.getElementsByTagName("DIV");
-		var newpp = [];
-		var currentPost = -1;
+		
 	    var css = 	'.lp-nc-block { position: fixed; top: 90px; right: 0px; z-index: 100; }' + 
 	      			'.lp-nc-block input { display: block; width: 28px; height: 28px; color: #000; background-color: #fff; border: 1px solid #000; padding: 0pt; margin: 0pt; margin-bottom: 1px; cursor: pointer; opacity: 0.25; }' +
 	      			'.lp-nc-block input:hover { opacity: 1; }';
-	    var script = "\
-	    	function LP_scrollTo(aThis) { \
-	        	aThis.blur(); \
-	        	var pId = aThis.getAttribute('postid'); \
-	        	var offset = parseInt(aThis.getAttribute('offset')); \
-	        	var p = $(pId); \
+	    var code = "\
+	    	function LP_scrollTo(_this) { \
+	        	_this.blur(); \
+	        	var postId = _this.getAttribute('data-post-id'); \
+	        	var offset = parseInt(_this.getAttribute('data-offset')); \
+	        	var p = $(postId); \
 	        	var f = new Fx.Scroll(window, {duration: 'short'}); \
-	        	if(!p || !offset || !f) return; \
+	        	if (!p || !offset || !f) return; \
 	        	f.start(0, offset); \
-	        	(function(){p.childNodes[1].highlight('#f4fbac');p.childNodes[3].highlight('#f4fbac');}).delay(250); \
+	        	(function(){ \
+	    			p.childNodes[1].highlight('#f4fbac'); \
+	    		}).delay(250); \
 	    	}";
-	
-	    var ppLength = pp.length;
-	    for (var i = 0; i < ppLength; i++) {
-	    	if (/comment/.test(pp[i].className) && /new/.test(pp[i].className)) {
-	    		newpp.push(pp[i]);
-	    	}
-	    }
-	
-	    if (newpp.length > 0) {
-	    	var style = doc.createElement("STYLE");
-	    	style.type = "text/css";
+	    
+	    var $comments = $('.comment.new', document);
+	    
+	    if ($comments.length > 0) {
+	    	var style = document.createElement('style');
+	    	style.type = 'text/css';
 	    	style.innerHTML = css;
-	    	doc.body.appendChild(style);
-	    	var scriptBlock = doc.createElement("SCRIPT");
-	    	scriptBlock.type = "text/javascript";
-	    	scriptBlock.innerHTML = script;
-	    	doc.body.appendChild(scriptBlock);
-	    	initializeNavLink();
-	    }
-	
-	    function initializeNavLink() {
-	    	var navBlock = doc.createElement("DIV");
-	    	navBlock.className = "lp-nc-block";
+	    	document.body.appendChild(style);
+	    	
+	    	var script = document.createElement('script');
+	    	script.type = "text/javascript";
+	    	script.innerHTML = code;
+	    	document.getElementsByTagName('head')[0].appendChild(script); 
+	    	
+	    	var navBlock = $(document.createElement('div')).addClass('lp-nc-block')[0];
 
-	    	navLinkNext = doc.createElement("INPUT");
-	    	navLinkNext.addEventListener("click", function() { navigate(1); }, false);
-	    	navLinkNext.setAttribute("type", "button");
-	    	navLinkNext.setAttribute("value", "↓");
-	    	navLinkNext.setAttribute("postid", newpp[0].id);
-	    	navLinkNext.setAttribute("onclick", "LP_scrollTo(this);");
-
-	    	navLinkPrev = doc.createElement("INPUT");
-	    	navLinkPrev.addEventListener("click", function() { navigate(-1); }, false);
-	    	navLinkPrev.setAttribute("type", "button");
-	    	navLinkPrev.setAttribute("value", "↑");
-	    	navLinkPrev.setAttribute("postid", newpp[0].id);
-	    	navLinkPrev.setAttribute("onclick", "LP_scrollTo(this);");
+	    	navLinkNext = $(document.createElement('input')).attr({
+	    		type: 'button',
+	    		value: '↓',
+	    		onclick: 'LP_scrollTo(this);',
+	    		'data-post-id': $comments[0].id
+	    	})[0];
+	    	navLinkNext.addEventListener("click", function() {
+	    		navigate(1);
+	    	}, false);
+	    	
+	    	navLinkPrev = $(document.createElement('input')).attr({
+	    		type: 'button',
+	    		value: '↑',
+	    		onclick: 'LP_scrollTo(this);',
+	    		'data-post-id': $comments[0].id
+	    	})[0];
+	    	navLinkPrev.addEventListener("click", function() {
+	    		navigate(-1);
+	    	}, false);
 
 	    	navBlock.appendChild(navLinkPrev);
 	    	navBlock.appendChild(navLinkNext);
-	    	doc.body.appendChild(navBlock);
+	    	document.body.appendChild(navBlock);
+	    	
+	    	setOffset($comments[currentPost]);
 	    }
-	
 
-	    function navigate(aDirection) {
-	    	if (aDirection > 0) {
+	    function navigate(dir) {
+	    	if (dir > 0) {
 	    		currentPost++;
-	    		if (currentPost >= newpp.length) {
-	    			currentPost = newpp.length - 1;
+	    		if (currentPost >= $comments.length) {
+	    			currentPost = $comments.length - 1;
 	    		}
 	    	} else {
 	    		currentPost--;
@@ -82,35 +82,35 @@ lpr2userscript_newComments.prototype = {
 	    			currentPost = 0;
 	    		}
 	    	}
-	    	navLinkNext.setAttribute("postid", newpp[currentPost].id);
-	    	navLinkPrev.setAttribute("postid", newpp[currentPost].id);
-	    	setOffset(newpp[currentPost]);
+	    	navLinkNext.setAttribute("data-post-id", $comments[currentPost].id);
+	    	navLinkPrev.setAttribute("data-post-id", $comments[currentPost].id);
+	    	setOffset($comments[currentPost]);
 	    }
 	
-	    function setOffset(aElement) {
-	    	var elTop = getOffsetTop(aElement);
-	    	var html = doc.documentElement;
+	    function setOffset(element) {
+	    	var elTop = getOffsetTop(element);
+	    	var html = document.documentElement;
 	    	var maxHtmlTop = html.scrollHeight - html.clientHeight;
 	    	var htmlTopOld = html.scrollTop;
 	    	var htmlTopNew;
-	    	if (aElement.offsetHeight > html.clientHeight) {
+	    	if (element.offsetHeight > html.clientHeight) {
 	    		htmlTopNew = elTop;
 	    	} else {
 	    		var htmlHalfHeight = Math.round(html.clientHeight / 2);
-	    		htmlTopNew = elTop - htmlHalfHeight + Math.round(aElement.offsetHeight / 2);
+	    		htmlTopNew = elTop - htmlHalfHeight + Math.round(element.offsetHeight / 2);
 	    	}
-	    	if(htmlTopNew > maxHtmlTop) {
+	    	if (htmlTopNew > maxHtmlTop) {
 	    		htmlTopNew = maxHtmlTop;
 	    	}
-	    	navLinkNext.setAttribute("offset", htmlTopNew);
-	    	navLinkPrev.setAttribute("offset", htmlTopNew);
+	    	navLinkNext.setAttribute('data-offset', htmlTopNew);
+	    	navLinkPrev.setAttribute('data-offset', htmlTopNew);
     	}
 	
-	    function getOffsetTop(aElement) {
-	    	var offsetTop = aElement.offsetTop;
-	    	while(aElement.offsetParent && aElement.offsetParent.offsetTop) {
-	    		aElement = aElement.offsetParent;
-	    		offsetTop += aElement.offsetTop;
+	    function getOffsetTop(element) {
+	    	var offsetTop = element.offsetTop;
+	    	while (element.offsetParent && element.offsetParent.offsetTop) {
+	    		element = element.offsetParent;
+	    		offsetTop += element.offsetTop;
 	    	}
 	    	return offsetTop;
 	    }

@@ -6,25 +6,31 @@ lpr2userscript_userNumbers.prototype = {
 	
 	include: new RegExp(":\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru"),
 	
-	run: function(document, $) {
-	    document.addEventListener("DOMNodeInserted", handleComment, false);
+	run: function(window, document, $) {
+		var wrapper = document.createElement('span');
+		// todo Very bad. Need to find the way to inject Zepto to document correctly, now it runs in ChromeWindow context
+		var $wrapper = $(document.createElement('span')).addClass('user-number');
 
-	    function makeNumbers() {
-	        $('.user_number', document).remove();
+		var handleNewHtml = function(e) {
+			var $html = $(e.target);
+			if ($html.find('.ddi').length > 0) {
+				makeNumbers(e.target);
+			}
+		};
+		
+		var makeNumbers = function(context) {
+			context = context || document;
 
-	        $('.ddi', document).each(function() {
-	            $(this).find('.js-date').before('<span class="user_number"> ' + $(this).find('.c_user').data('user_id') + ', </span>\n');
+			$('.ddi .user-number', context).remove();
+
+	        $('.ddi .c_user', context).each(function() {
+	        	$(this).after($wrapper.clone().text(', ' + this.getAttribute('data-user_id')));
 	        });
-	    }
+		}
 	    
-	    function handleComment(event) {
-	        var check = $(event.target).find('.ddi');
-	        if (check.length > 0) {
-	            makeNumbers();
-	        }
-	    }
-
 	    makeNumbers();
+	    
+		document.addEventListener("DOMNodeInserted", handleNewHtml, false);
 	}
 }
 

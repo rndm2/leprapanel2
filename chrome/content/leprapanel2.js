@@ -14,8 +14,15 @@
 	Lpr2.prototype.serve = function(doc) {
 		for (var i = 0; i < this._scripts.length; i++) {
 			var script = this._scripts[i];
+			
 			if (this._enabled[script.name] && this._enabled[script.name] == true && script.include.test(doc.location.href)) {
-				script.run(doc, $);
+				try {
+					var t1 = new Date();
+					script.run.apply(doc.defaultView, [doc.defaultView, doc, $]);
+					console.log('--- ' + script.name + ' run in ' + (new Date() - t1) + 'ms');
+				} catch(e) {
+					console.log('LepraPanel2 userscript error', script.name, e);
+				}
 			}
 		}
 	}
@@ -376,7 +383,7 @@
 		var $stuff = $('#js-header_nav_my_things i', doc);
 		var $inbox = $('#js-header_nav_inbox i', doc);
 		if ($stuff.length > 0 && $inbox.length > 0) {
-			this.user.stuff = $stuff.html().replace('мои вещи ', '');
+			this.user.stuff = $stuff.html().replace(/[\D\s]+/, '');
 			this.user.inbox = $inbox.html();
 			this._setLocalData();
 		}

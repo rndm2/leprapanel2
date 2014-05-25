@@ -6,61 +6,44 @@ lpr2userscript_commentAndRatingFont.prototype = {
 	
 	include: new RegExp(":\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru\/comments\/\\d+"),
 	
-	run: function(doc, $) {
-		var divs = doc.getElementsByTagName("div");
-	    var divslen = divs.length;
-	    var comment;
-	    var rating;
-	    var notPost = false;
+	run: function(window, document, $) {
+		var css = '.c_vote .vote_result { width: auto; min-width: 24px; padding: 0 4px; }' +
+				  '.vote-big-38 .vote_button { right: 2px; }' + 
+				  '.vote-big-48 .vote_button { right: 7px; }';
+		
+		var style = document.createElement('style');
+		style.type = 'text/css';
+		style.innerHTML = css;
+		document.body.appendChild(style);
+		 
+		var $votes = $('.comment .vote_result', document);
+		$votes.each(function() {
+			var rating = parseInt(this.innerHTML);
+			if (rating > 0) {
+				var fontSize = Math.min(16, 9 + Math.round(0.3 * Math.sqrt(Math.abs(rating * 4))));
+				this.style.fontSize = fontSize + 'px';
+				
+				if (fontSize == 16) {
+					if (rating > 999) {
+						this.parentNode.className += ' vote-big-48';
+					} else {
+						this.parentNode.className += ' vote-big-38';
+					}
+				}
 
-	    for(var i = 0; i < divslen; i++) {
-	    	comment = divs[i];
-
-	    	if(comment.className.indexOf("comment") != -1 && comment.getAttribute('data-post_id') != null) {
-	    		if (notPost) {
-	    			rating = getRating(comment);
-
-	    			if (rating > 99 && rating <= 999) {
-	    				//comment.childNodes[1].childNodes[5].childNodes[3].style.width = "40px";
-	    				//comment.childNodes[1].childNodes[5].childNodes[3].style.height = "18px";
-	    				//comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.textAlign = "right";
-	    			}
-	    			if (rating > 999) {
-	    				//comment.childNodes[1].childNodes[5].childNodes[3].style.width = "45px";
-	    				//comment.childNodes[1].childNodes[5].childNodes[3].style.height = "18px";
-	    				//comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.textAlign = "right";
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#ff0000";
-	    			}
-	    			if (rating>512 && rating<=999)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#cc0000";
-	    			if (rating>255 && rating<=512)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#990000";
-	    			if (rating>156 && rating<=255)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#000000";
-	    			if (rating>64 && rating<=156)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#666666";
-	    			if (rating>0)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.fontSize = Math.min(16,9+Math.round(0.3*Math.sqrt(Math.abs(rating*4)))) + "px";
-	    			if (rating<=-5 && rating>-42)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#aaaa33";
-	    			if (rating<=-42 && rating>-100)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#bb8833";
-	    			if (rating<=-100 && rating>-150)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#aa7733";
-	    			if (rating<=-150 && rating>-250)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#aa5533";
-	    			if (rating<=-250)
-	    				comment.childNodes[1].childNodes[5].childNodes[3].childNodes[3].style.color = "#993333";
-	    		} else {
-	    			notPost = true;
-	    		}
-	    	}
-	    }
-
-	    function getRating(div) {
-	    	var r = $('.vote_result', div).text();
-	    	return parseInt(r, 10);
-	    }
+				if (rating > 999) this.style.color = '#ff0000';
+    			if (rating > 512 && rating <= 999) this.style.color = '#cc0000';
+    			if (rating > 255 && rating <= 512) this.style.color = '#990000';
+    			if (rating > 156 && rating <= 255) this.style.color = '#000000';
+    			if (rating > 64 && rating <= 156) this.style.color = '#666666';
+			} else {
+				if (rating <= -5 && rating > -42) this.style.color = '#aaaa33';
+    			if (rating <= -42 && rating > -100) this.style.color = '#bb8833';
+    			if (rating <= -100 && rating > -150) this.style.color = '#aa7733';
+    			if (rating <= -150 && rating > -250) this.style.color = '#aa5533';
+    			if (rating <= -250) this.style.color = '#993333';	
+			}
+		});
 	}
 }
 

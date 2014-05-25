@@ -1,14 +1,19 @@
 <?xml version="1.0" ?>
 <vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <setting title="Основные настройки" type="control" style="margin-top: 50px; border: 0; font-weight: bold"></setting>
     <setting pref="extensions.leprapanel2.greeting" title="Показывать приветствие" type="bool"></setting>
     <setting pref="extensions.leprapanel2.thirdOption" type="bool" title="Смешная третья опция"></setting>
     <setting pref="extensions.leprapanel2.checkRatings" title="Проверять карму и рейтинг" type="bool"></setting>
     <setting pref="extensions.leprapanel2.checkStuff" title="Проверять мои вещи и инбокс" type="bool"></setting>
     <setting pref="extensions.leprapanel2.checkLepra" title="Проверять мои вещи и инбокс чаще" type="bool">Если включено будет проверять мои вещи и инбокс при каждом просмотре любой страницы лепры не отправляя дополнительного запроса</setting>
     <setting pref="extensions.leprapanel2.checkPeriod" title="Период обновления (мин):" type="integer">Можно попробовать установить в ноль</setting>
-    <setting title="Настроить юзерскрипты" type="control">
-        <button label="О-о-о, давайте настроим юзерскрипты" oncommand="openDialog('chrome://leprapanel2/content/userscripts.xul', '', 'chrome,titlebar,toolbar,centerscreen,modal');"/>
-    </setting>
+    
+    <setting title="Настройки юзерскриптов" type="control" style="margin-top: 50px; border: 0; font-weight: bold"></setting>
+    <setting pref="extensions.leprapanel2.userscripts.commentAndRatingFont" title="Шрифт рейтинга комментариев" type="bool">Изменяет размер и цвет шрифта рейтинга комментариев</setting>
+    <setting pref="extensions.leprapanel2.userscripts.newComments" title="Кнопки навигации" type="bool">Добавляет кнопки со стрелками вверх/вниз для перемещения на предыдущий/следующий новый комментарий. Очень полезно, когда вы читаете большой пост с несколькими новыми комментами — вам не придется яростно скроллить всю страницу, чтобы найти их. Работает внутри постов и инбоксов.</setting>
+    <setting pref="extensions.leprapanel2.userscripts.transparentImages" title="Полупрозрачные картинки" type="bool">Все приложенные картинки отображаются прозрачными (на 75%, если точнее), и приобретают нормальный облик при наведении на них мышкой. Бывает очень полезно для экстремального чтения лепры, особенно в офисе, особенно в пятницу. Работает внутри постов и инбоксов.</setting>
+    <setting pref="extensions.leprapanel2.userscripts.commaToColon" title="Заменять запятую на двоеточие в ответах на комментарии" type="bool">Заменяет запятую на двоеточие при ответах на комментарии так как это было на старой лепре.</setting>
+    <setting pref="extensions.leprapanel2.userscripts.userNumbers" title="Верните номера" type="bool">Показывает номера пользователей рядом с юзернеймом.</setting>
+    <setting pref="extensions.leprapanel2.userscripts.leproTotalComments" title="LeproTotalComments" type="bool">Расширенный фильтр комментариев</setting>
+    <setting pref="extensions.leprapanel2.userscripts.eraseFromStuff" title="Стереть из моих вещей" type="bool">Меняет "из моих вещей" на "стереть из моих вещей" как было раньше</setting>
 </vbox>
-
-

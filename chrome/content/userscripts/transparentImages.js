@@ -6,17 +6,14 @@ lpr2userscript_transparentImages.prototype = {
 	
 	include: new RegExp(":\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru"),
 	
-	run: function(doc, $) {
-		 var css = 'div.post .dt img { opacity: 0.25; } \
-		      		div.post .dt img:hover { opacity: 1; }';
+	run: function(window, document, $) {
+		 var css = 'div.post .dt img { opacity: 0.25; } div.post .dt img:hover { opacity: 1; }';
 
-		 var style = doc.createElement("STYLE");
-		 style.type = "text/css";
+		 var style = document.createElement('style');
+		 style.type = 'text/css';
 		 style.innerHTML = css;
-		 doc.body.appendChild(style);
+		 document.body.appendChild(style);
 	}
 }
 
 lpr2bridge._lpr2Instance._scripts.push(new lpr2userscript_transparentImages());
-
-

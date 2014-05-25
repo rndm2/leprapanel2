@@ -6,7 +6,7 @@ lpr2userscript_leproTotalComments.prototype = {
 	
 	include: new RegExp(":\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru"),
 	
-	run: function(document, $) {
+	run: function(window, document, $) {
 	    var pluginId = 'lepro-total-comments-v2';
 	    var defaultMode = 'allall';
 	    var viewModeCookie = pluginId + '-view-mode';

@@ -3,7 +3,7 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
     <Description about="urn:mozilla:install-manifest">
         <em:id>leprapanel2@random.net.ua</em:id>
-        <em:version>0.32</em:version>
+        <em:version>0.4</em:version>
         <em:type>2</em:type>
 
         <em:targetApplication>
@@ -19,7 +19,8 @@
         <em:creator>random@random.net.ua</em:creator>
         <em:contributor>random2 https://leprosorium.ru/users/random2</em:contributor>
         <em:contributor>Omen https://leprosorium.ru/users/Omen</em:contributor>
-        <em:contributor>vnizzz https://leprosorium.ru/users/vnizzz</em:contributor>
+        <em:contributor>pomapoma https://leprosorium.ru/users/pomapoma</em:contributor>
+        <em:contributor>ste-art https://leprosorium.ru/users/ste-art</em:contributor>
         <em:iconURL>chrome://leprapanel2/skin/logo32.png</em:iconURL>
         <em:homepageURL>http://random.net.ua/leprapanel2</em:homepageURL>
         <em:optionsType>2</em:optionsType>
