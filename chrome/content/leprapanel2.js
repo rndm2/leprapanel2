@@ -11,7 +11,7 @@
 		}
 	}
 	
-	Lpr2.prototype._evalInSandbox = function(script, doc) {
+	Lpr2.prototype._evalInSandbox = function(script, doc, data) {
 		var sandbox = new Components.utils.Sandbox(doc.defaultView);
 	    sandbox.unsafeWindow = doc.defaultView.window.wrappedJSObject;
 	    sandbox.window = doc.defaultView.window;
@@ -19,17 +19,17 @@
 	    sandbox.__proto__ = sandbox.window;
 	    var functionName = 'execute_' + script.name;
 	    var functionText = 'function ' + functionName + script.run.toString().substring(8);
-	    functionText += '; ' + functionName + '(window, document, Zepto);';
+	    functionText += '; window.lpr2data = ' + JSON.stringify(data) + '; ' + functionName + '(window, document, Zepto);';
     	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.min.js', sandbox, 'UTF–8');
 	    Components.utils.evalInSandbox(functionText, sandbox);
 	}
 	
-	Lpr2.prototype.serve = function(doc) {
+	Lpr2.prototype.serve = function(doc, data) {
 		for (var i = 0; i < this._scripts.length; i++) {
 			var script = this._scripts[i];
 			if (this._enabled[script.name] && this._enabled[script.name] == true && script.include.test(doc.location.href)) {
 					var t1 = new Date();
-					this._evalInSandbox(script, doc);
+					this._evalInSandbox(script, doc, data || {});
 					console.log('--- ' + script.name + ' run in ' + (new Date() - t1) + 'ms');
 			}
 		}
@@ -41,6 +41,9 @@
 		this._observerService = undefined;
 		this._cookieService = undefined;
 		this._ioService = undefined;
+		this._fileService = undefined;
+		
+		this._storageData = undefined;
 		
 		this._lpr2Instance = new Lpr2();
 		
@@ -121,10 +124,14 @@
 	}
 
 	Lpr2Bridge.prototype.init = function() {
+		Components.utils.import("resource://gre/modules/FileUtils.jsm");
+		Components.utils.import("resource://gre/modules/NetUtil.jsm");
+
 		this._preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.leprapanel2.");
 		this._observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 		this._cookieService = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
 		this._ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
+		this._fileService = FileUtils.getFile("ProfD", ["leprapanel2.json"]);
 		
 		this._loadPreferences();
 
@@ -141,6 +148,7 @@
 	Lpr2Bridge.prototype._runLevel0 = function() {
 		this._prepareUI();
 		if (this.user.logged) {
+			this._readFromFile();
 			this._getLocalData();
 			this._getRemoteData(true);
 			this._schedule();
@@ -278,6 +286,7 @@
 		}
 		if (data.hasOwnProperty('karma_votes') && data.karma_votes.length > 0) {
 			this.user.attitude.data = data.karma_votes[data.karma_votes.length - 1];
+			this._storageData = data;			
 		}
 		if (data.hasOwnProperty('karma') && data.karma != this.user.karma) {
 			this.user.attitude.karma = this.user.karma > data.karma;
@@ -390,7 +399,7 @@
 	Lpr2Bridge.prototype._onPageLoad = function(e) {
 		var doc = e.target;
 		if (doc instanceof HTMLDocument && !doc.defaultView.frameElement && doc.location.href) {
-			this._lpr2Instance.serve(doc);
+			this._lpr2Instance.serve(doc, $.extend(this._storageData, this.user));
 			if (this.settings.checkLepra) {
 				this._getStuffInboxFromHtml(doc);
 			}
@@ -409,7 +418,40 @@
 	}
 	
 	Lpr2Bridge.prototype.destroy = function() {
+		this._writeToFile(this._storageData);
 		this._unregisterObservers();	
+	}
+	
+	Lpr2Bridge.prototype._readFromFile = function() {
+		var data = '';
+		var fstream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
+		var cstream = Components.classes["@mozilla.org/intl/converter-input-stream;1"].createInstance(Components.interfaces.nsIConverterInputStream);
+
+		if (!this._fileService.exists() || !this._fileService.isFile()) return false;
+		
+		fstream.init(this._fileService, -1, 0, 0);
+		cstream.init(fstream, 'UTF-8', 0, 0);
+
+		let (str = {}) {
+			let read = 0;
+			do { 
+				read = cstream.readString(0xffffffff, str);
+				data += str.value;
+			} while (read != 0);
+		}
+		cstream.close();
+		
+		this._storageData = JSON.parse(data);
+	}
+	
+	Lpr2Bridge.prototype._writeToFile = function(data) {
+		var data = JSON.stringify(data);
+		
+		var ostream = FileUtils.openSafeFileOutputStream(this._fileService);
+		var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+		converter.charset = "UTF-8";
+		var istream = converter.convertToInputStream(data);
+		NetUtil.asyncCopy(istream, ostream);
 	}
 	
 	window.lpr2bridge = new Lpr2Bridge();
