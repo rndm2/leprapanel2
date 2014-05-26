@@ -31,7 +31,7 @@ lpr2userscript_newComments.prototype = {
 	    }
 	    var code = 'function LP_scrollTo' + hostFunction.toString().substring(8);
 	    
-	    var $comments = $('.comment', document);
+	    var $comments = $('.comment.new', document);
 	    
 	    if ($comments.length > 0) {
 	    	var style = document.createElement('style');
