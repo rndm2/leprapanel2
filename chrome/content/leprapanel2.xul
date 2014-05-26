@@ -20,7 +20,7 @@
 				    label="Глагне"
 				    tooltiptext="Перейти на Глагне"
 					data-href="https://leprosorium.ru"
-					oncommand="lpr2bridge.navigate(event)"
+					onclick="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/logo16.png"
                     class="menuitem-iconic" />
 				<menuseparator class="for-logged" hidden="true" />
@@ -29,7 +29,7 @@
 				    label="Мои вещи"
 				    tooltiptext="Перейти в мои вещи"
 					data-href="https://leprosorium.ru/my"
-					oncommand="lpr2bridge.navigate(event)"
+					onclick="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/stuff.png"
 					class="menuitem-iconic for-logged" />
 				<menuitem
@@ -37,7 +37,7 @@
 				    label="Инбокс"
 				    tooltiptext="Перейти в инбокс"
 					data-href="https://leprosorium.ru/my/inbox"
-					oncommand="lpr2bridge.navigate(event)"
+					onclick="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/inbox.png"
 					class="menuitem-iconic for-logged" />
 				<menuitem
@@ -45,7 +45,7 @@
 					label="Избранное"
 					tooltiptext="Перейти в избранное"
 					data-href="https://leprosorium.ru/my/favourites"
-					oncommand="lpr2bridge.navigate(event)"
+					onclick="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/favourites.png"
 					class="menuitem-iconic for-logged" />
 				<menuseparator class="for-logged" hidden="true" />
@@ -54,7 +54,7 @@
 					label="Мой профайл"
 					tooltiptext="Перейти в мой профайл"
 					data-href=""
-					oncommand="lpr2bridge.navigate(event)"
+					onclick="lpr2bridge.navigate(event)"
 					image="chrome://leprapanel2/skin/user.png"
 					class="menuitem-iconic for-logged" />
 				<menuseparator class="for-logged" hidden="true" />
@@ -68,23 +68,23 @@
                             label="Написать пост"
 							tooltiptext="Написать новый пост"
 							data-href="https://leprosorium.ru/asylum"
-							oncommand="lpr2bridge.navigate(event)" />
+							onclick="lpr2bridge.navigate(event)" />
 						<menuseparator />
 						<menuitem
                             label="Поиск"
 							tooltiptext="Поиск (вероятно не работает)"
 							data-href="http://search.leprosorium.ru"
-							oncommand="lpr2bridge.navigate(event)" />
+							onclick="lpr2bridge.navigate(event)" />
 						<menuitem
                             label="Белый дом"
 							tooltiptext="Перейти в Белый дом"
 							data-href="https://leprosorium.ru/democracy"
-							oncommand="lpr2bridge.navigate(event)" />
+							onclick="lpr2bridge.navigate(event)" />
 						<menuitem
                             label="Выборы ПГ"
 							tooltiptext="Пройти на выборы президента Грузии (ненастоящей)"
 							data-href="https://leprosorium.ru/elections/president"
-							oncommand="lpr2bridge.navigate(event)" />
+							onclick="lpr2bridge.navigate(event)" />
 					</menupopup>
 				</menu>
 			</popup>
@@ -134,8 +134,8 @@
                         width="16" height="16"
                         src="chrome://leprapanel2/skin/bullet-plus.png"
                         tooltiptext="Карма"
-                        persist="src" />
-					<label id="LepraPanel2-persist-karma" tooltiptext="Карма" name="karma" value="" persist="value" />
+                        persist="src tooltiptext" />
+					<label id="LepraPanel2-persist-karma" tooltiptext="Карма" name="karma" value="" persist="value tooltiptext" />
 					<spacer class="inner-separator" />
 					<image
                         id="LepraPanel2-persist-rating-image"

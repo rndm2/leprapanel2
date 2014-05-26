@@ -7,6 +7,7 @@ lpr2userscript_commaToColon.prototype = {
 	include: new RegExp(":\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru"),
 	
 	run: function(window, document, $) {
+
 		var commaToColon = function() {
 			// todo: Try to find best way 
 	        var source = window.commentForm.prototype.show.toString()

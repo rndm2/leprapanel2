@@ -11,18 +11,26 @@
 		}
 	}
 	
+	Lpr2.prototype._evalInSandbox = function(script, doc) {
+		var sandbox = new Components.utils.Sandbox(doc.defaultView);
+	    sandbox.unsafeWindow = doc.defaultView.window.wrappedJSObject;
+	    sandbox.window = doc.defaultView.window;
+	    sandbox.document = sandbox.window.document;
+	    sandbox.__proto__ = sandbox.window;
+	    var functionName = 'execute_' + script.name;
+	    var functionText = 'function ' + functionName + script.run.toString().substring(8);
+	    functionText += '; ' + functionName + '(window, document, Zepto);';
+    	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.min.js', sandbox, 'UTF–8');
+	    Components.utils.evalInSandbox(functionText, sandbox);
+	}
+	
 	Lpr2.prototype.serve = function(doc) {
 		for (var i = 0; i < this._scripts.length; i++) {
 			var script = this._scripts[i];
-			
 			if (this._enabled[script.name] && this._enabled[script.name] == true && script.include.test(doc.location.href)) {
-				try {
 					var t1 = new Date();
-					script.run.apply(doc.defaultView, [doc.defaultView, doc, $]);
+					this._evalInSandbox(script, doc);
 					console.log('--- ' + script.name + ' run in ' + (new Date() - t1) + 'ms');
-				} catch(e) {
-					console.log('LepraPanel2 userscript error', script.name, e);
-				}
 			}
 		}
 	}
@@ -57,7 +65,11 @@
 			inbox: '',
 			attitude: {
 				karma: undefined,
-				rating: undefined
+				rating: undefined,
+				data: {
+					user: undefined,
+					attitude: undefined
+				}
 			}
 		};
 		
@@ -91,6 +103,7 @@
 				elements: {
 					profile: '.LepraPanel2-Holder #LepraPanel2-NavigateMenu [image$="user.png"]',
 					karma: '.LepraPanel2-Holder #LepraPanel2-persist-karma-image',
+					karmaText: '#LepraPanel2-persist-karma',
 					rating: '.LepraPanel2-Holder #LepraPanel2-persist-rating-image',
 					stuff: '.LepraPanel2-Holder #LepraPanel2-persist-stuff-image',
 					inbox: '.LepraPanel2-Holder #LepraPanel2-persist-inbox-image'
@@ -225,7 +238,10 @@
 					if (typeof attitude != 'undefined') {
 						if (!this.settings.thirdOption) {
 							$(this.config.layout.elements[keys[i]]).attr('src', attitude ? this.config.layout.images.minus : this.config.layout.images.plus);	
-						}						
+						}
+						var tooltipText = '' + this.user.attitude.data.login + ' ' + (this.user.attitude.data.attitude > 0 ? '+' : '') + this.user.attitude.data.attitude;
+						$(this.config.layout.elements.karma).attr('tooltiptext', tooltipText);
+						$(this.config.layout.elements.karmaText).attr('tooltiptext', tooltipText);
 						this.user.attitude[keys[i]] = undefined;
 					} else {
 						continue;
@@ -259,6 +275,9 @@
 	Lpr2Bridge.prototype._writeData = function(data) {
 		if (!data) {
 			return false;
+		}
+		if (data.hasOwnProperty('karma_votes') && data.karma_votes.length > 0) {
+			this.user.attitude.data = data.karma_votes[data.karma_votes.length - 1];
 		}
 		if (data.hasOwnProperty('karma') && data.karma != this.user.karma) {
 			this.user.attitude.karma = this.user.karma > data.karma;

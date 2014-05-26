@@ -7,9 +7,7 @@ lpr2userscript_userNumbers.prototype = {
 	include: new RegExp(":\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru"),
 	
 	run: function(window, document, $) {
-		var wrapper = document.createElement('span');
-		// todo Very bad. Need to find the way to inject Zepto to document correctly, now it runs in ChromeWindow context
-		var $wrapper = $(document.createElement('span')).addClass('user-number');
+		var $wrapper = $('<span class="user-number" />');
 
 		var handleNewHtml = function(e) {
 			var $html = $(e.target);
@@ -24,7 +22,7 @@ lpr2userscript_userNumbers.prototype = {
 			$('.ddi .user-number', context).remove();
 
 	        $('.ddi .c_user', context).each(function() {
-	        	$(this).after($wrapper.clone().text(', ' + this.getAttribute('data-user_id')));
+	        	$(this).after($wrapper.clone().text(' [' + this.getAttribute('data-user_id') + ']'));
 	        });
 		}
 	    

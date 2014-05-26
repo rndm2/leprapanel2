@@ -14,21 +14,24 @@ lpr2userscript_newComments.prototype = {
 	    var css = 	'.lp-nc-block { position: fixed; top: 90px; right: 0px; z-index: 100; }' + 
 	      			'.lp-nc-block input { display: block; width: 28px; height: 28px; color: #000; background-color: #fff; border: 1px solid #000; padding: 0pt; margin: 0pt; margin-bottom: 1px; cursor: pointer; opacity: 0.25; }' +
 	      			'.lp-nc-block input:hover { opacity: 1; }';
-	    var code = "\
-	    	function LP_scrollTo(_this) { \
-	        	_this.blur(); \
-	        	var postId = _this.getAttribute('data-post-id'); \
-	        	var offset = parseInt(_this.getAttribute('data-offset')); \
-	        	var p = $(postId); \
-	        	var f = new Fx.Scroll(window, {duration: 'short'}); \
-	        	if (!p || !offset || !f) return; \
-	        	f.start(0, offset); \
-	        	(function(){ \
-	    			p.childNodes[1].highlight('#f4fbac'); \
-	    		}).delay(250); \
-	    	}";
+	    var hostFunction = function(_this) {
+	    	var event = document.createEvent('HTMLEvents');
+			event.initEvent('handledNewComments', true, true);
+			_this.dispatchEvent(event);
+        	_this.blur();
+        	var postId = _this.getAttribute('data-post-id');
+        	var offset = parseInt(_this.getAttribute('data-offset'));
+        	var p = $(postId);
+        	var f = new Fx.Scroll(window, {duration: 'short'});
+        	if (!p || !offset || !f) return;
+        	f.start(0, offset);
+        	(function(){
+    			p.childNodes[1].highlight('#f4fbac');
+    		}).delay(250);
+	    }
+	    var code = 'function LP_scrollTo' + hostFunction.toString().substring(8);
 	    
-	    var $comments = $('.comment.new', document);
+	    var $comments = $('.comment', document);
 	    
 	    if ($comments.length > 0) {
 	    	var style = document.createElement('style');
@@ -43,23 +46,23 @@ lpr2userscript_newComments.prototype = {
 	    	
 	    	var navBlock = $(document.createElement('div')).addClass('lp-nc-block')[0];
 
-	    	navLinkNext = $(document.createElement('input')).attr({
+	    	navLinkNext = $('<input />').attr({
 	    		type: 'button',
 	    		value: '↓',
 	    		onclick: 'LP_scrollTo(this);',
 	    		'data-post-id': $comments[0].id
 	    	})[0];
-	    	navLinkNext.addEventListener("click", function() {
+	    	navLinkNext.addEventListener('handledNewComments', function() {
 	    		navigate(1);
 	    	}, false);
 	    	
-	    	navLinkPrev = $(document.createElement('input')).attr({
+	    	navLinkPrev = $('<input />').attr({
 	    		type: 'button',
 	    		value: '↑',
 	    		onclick: 'LP_scrollTo(this);',
 	    		'data-post-id': $comments[0].id
 	    	})[0];
-	    	navLinkPrev.addEventListener("click", function() {
+	    	navLinkPrev.addEventListener('handledNewComments', function() {
 	    		navigate(-1);
 	    	}, false);
 
