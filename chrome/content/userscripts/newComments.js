@@ -7,7 +7,7 @@ lpr2userscript_newComments.prototype = {
 	include: new RegExp(':\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru\/(comments\/\\d+|my\/inbox\/\\d+)'),
 	
 	run: function(window, document, $) {
-		var currentPost = 0;
+		var currentPost = -1;
 		var navLinkNext;
 		var navLinkPrev;
 		
