@@ -91,6 +91,7 @@ lpr2userscript_newComments.prototype = {
 	    }
 	
 	    function setOffset(element) {
+	    	if (!element) return;
 	    	var elTop = getOffsetTop(element);
 	    	var html = document.documentElement;
 	    	var maxHtmlTop = html.scrollHeight - html.clientHeight;
