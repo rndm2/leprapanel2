@@ -38,6 +38,8 @@ lpr2userscript_up.prototype = {
 	    			$block.fade(document.documentElement.scrollTop > 100 ? 'in' : 'out');
 	    		}, 100);	
 	    	}, false);
+	    	var event = new CustomEvent('scroll');
+	    	window.dispatchEvent(event);
 		}
 		var code = 'function LP_upInit' + hostFunction.toString().substring(8);
 		code += '; LP_upInit();';
