@@ -14,3 +14,4 @@ pref("extensions.leprapanel2.userscripts.leproTotalComments", false);
 pref("extensions.leprapanel2.userscripts.eraseFromStuff", false);
 pref("extensions.leprapanel2.userscripts.karmaAttitude", true);
 pref("extensions.leprapanel2.userscripts.goodLatvia", true);
+pref("extensions.leprapanel2.userscripts.up", true);

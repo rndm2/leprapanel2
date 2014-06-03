@@ -18,4 +18,5 @@
     <setting pref="extensions.leprapanel2.userscripts.eraseFromStuff" title="Стереть из моих вещей" type="bool">Меняет "из моих вещей" на "стереть из моих вещей" как было раньше</setting>
     <setting pref="extensions.leprapanel2.userscripts.karmaAttitude" title="Изменения кармы" type="bool">При заходе в чужой профиль показывает срал ли вам юзернейм в карму и каким образом</setting>
     <setting pref="extensions.leprapanel2.userscripts.goodLatvia" title="Пофиксить профили латышей" type="bool">Для латышей не будет огромной чёрной конины в профиле на весь экран, вместо этого аккуратная ссылка под юзернеймом, которая и покажет конину</setting>
+    <setting pref="extensions.leprapanel2.userscripts.up" title="Кнопка наверх" type="bool">Добавляет кнопку наверх на всех страницах сайта</setting>
 </vbox>

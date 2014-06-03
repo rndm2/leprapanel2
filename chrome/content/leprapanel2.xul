@@ -14,6 +14,7 @@
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/eraseFromStuff.js" />
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/karmaAttitude.js" />	
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/goodLatvia.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/up.js" />
 
 	<window id="main-window">
 		<popupset class="LepraPanel2-Holder">
