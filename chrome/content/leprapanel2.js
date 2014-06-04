@@ -40,10 +40,9 @@
 		this._preferencesService = undefined;
 		this._observerService = undefined;
 		this._cookieService = undefined;
-		this._ioService = undefined;
 		this._fileService = undefined;
 		
-		this._storageData = undefined;
+		this._storageData = {};
 		
 		this._lpr2Instance = new Lpr2();
 		
@@ -79,7 +78,7 @@
 		this.config = {
 			id: 'leprapanel2@random.net.ua',
 			url: {
-				home: 'https://leprosorium.ru/',
+				domain: 'leprosorium.ru',
 				api: 'https://leprosorium.ru/api/lepropanel',
 				users: 'https://leprosorium.ru/users/'
 			},
@@ -126,11 +125,11 @@
 	Lpr2Bridge.prototype.init = function() {
 		Components.utils.import("resource://gre/modules/FileUtils.jsm");
 		Components.utils.import("resource://gre/modules/NetUtil.jsm");
+		Components.utils.import("resource://gre/modules/Services.jsm");
 
 		this._preferencesService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.leprapanel2.");
 		this._observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
-		this._cookieService = Components.classes["@mozilla.org/cookieService;1"].getService(Components.interfaces.nsICookieService);
-		this._ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
+		this._cookieService = Services.cookies;
 		this._fileService = FileUtils.getFile("ProfD", ["leprapanel2.json"]);
 		
 		this._loadPreferences();
@@ -174,28 +173,30 @@
 	}
 
 	Lpr2Bridge.prototype._getSession = function() {
-		var uri = this._ioService.newURI(this.config.url.home, null, null);
-		var cookie = this._cookieService.getCookieString(uri, null);
-		var uid;
-		var sid;
-		if (cookie) {
-			uid = cookie.match(/uid=([0-9]+)/);
-			sid = cookie.match(/sid=([A-Za-z0-9]+)/);
+		var cookies = {};
+		var hostCookies = this._cookieService.getCookiesFromHost(this.config.url.domain);
+		
+		while (hostCookies.hasMoreElements()) {
+			var currentCookie = hostCookies.getNext().QueryInterface(Components.interfaces.nsICookie);
+			cookies[currentCookie.name] = currentCookie.value;
 		}
-		if (uid && sid && uid[1] && sid[1]) {
-			if (this.user.uid != uid[1] || this.user.sid != sid[1]) {
+		
+		if (cookies && cookies.uid && cookies.sid) {
+			if (this.user.uid != cookies.uid || this.user.sid != cookies.sid) {
 				this._ready.uiAuth = false;
 				this.user.logged = true;
 				this.user.changed = true;
-				this.user.uid = uid[1];
-				this.user.sid = sid[1];
+				this.user.uid = cookies.uid;
+				this.user.sid = cookies.sid;
 			} else {
 				this.user.changed = false;
 			}
 		} else {
 			this._ready.uiAuth = false;
-			this.user.changed = true;
 			this.user.logged = false;
+			this.user.changed = true;
+			this.user.uid = undefined;
+			this.user.sid = undefined;
 		}
 	}
 	
@@ -266,17 +267,27 @@
 
 	Lpr2Bridge.prototype._getRemoteData = function(full) {
 		var _this = this;
-		
-		var answerHandler = function(answer) {
-			_this._writeData(answer);
-			_this._setLocalData();
-			_this._prepareUI();
+
+		var makeRequest = function(uri, answerHandler) {
+			$.ajax({
+				type: 'get',
+				url: uri,
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader('Cookie', 'sid=' + _this.user.sid + ';uid=' + _this.user.uid);
+				},
+				dataType: 'json',
+				success: function(answer) {
+					_this._writeData(answer);
+					_this._setLocalData();
+					_this._prepareUI();
+				}
+			});
 		};
 		
-		$.getJSON(this.config.url.api, answerHandler);
+		makeRequest(this.config.url.api);
 		
 		if (full) {
-			$.getJSON(this.config.url.api + '/' + this.user.uid, answerHandler);	
+			makeRequest(this.config.url.api + '/' + this.user.uid);	
 		};
 	}
 	
