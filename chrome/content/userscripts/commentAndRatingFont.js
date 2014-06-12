@@ -17,8 +17,10 @@ lpr2userscript_commentAndRatingFont.prototype = {
 		document.body.appendChild(style);
 		 
 		var $votes = $('.comment .vote_result', document);
+		
 		$votes.each(function() {
 			var rating = parseInt(this.innerHTML);
+			
 			if (rating > 0) {
 				var fontSize = Math.min(16, 9 + Math.round(0.3 * Math.sqrt(Math.abs(rating * 4))));
 				this.style.fontSize = fontSize + 'px';

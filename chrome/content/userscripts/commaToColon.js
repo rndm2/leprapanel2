@@ -10,12 +10,12 @@ lpr2userscript_commaToColon.prototype = {
 
 		var commaToColon = function() {
 			// todo: Try to find best way 
-	        var source = window.commentForm.prototype.show.toString()
+			var source = window.commentForm.prototype.show.toString()
 	        				.replace("this.container.getElement('textarea').value = this.options.comment_user_name ? this.options.comment_user_name + ', ' : '';",
 	        						 "this.container.getElement('textarea').value = this.options.comment_user_name ? this.options.comment_user_name + ': ' : '';"
 	        				);
-	        eval('window.commentForm.prototype.show = ' + source);
-	    };
+			eval('window.commentForm.prototype.show = ' + source);
+		};
 
 	    var script = document.createElement('script'); 
 	    script.type = "text/javascript"; 

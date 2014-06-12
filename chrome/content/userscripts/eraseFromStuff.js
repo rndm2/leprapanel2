@@ -9,6 +9,7 @@ lpr2userscript_eraseFromStuff.prototype = {
 	run: function(window, document, $) {
 		var handleNewHtml = function(e) {
 			var $targets = $('.b-post_my_post_controls_button_out_interest', e ? e.target : document);
+			
 			if ($targets.length > 0) {
 				$targets.text('стереть из моих вещей');
 			}
@@ -16,7 +17,7 @@ lpr2userscript_eraseFromStuff.prototype = {
 	    
 		handleNewHtml();
 		
-		document.addEventListener("DOMNodeInserted", handleNewHtml, false);
+		document.addEventListener('DOMNodeInserted', handleNewHtml, false);
 	}
 }
 

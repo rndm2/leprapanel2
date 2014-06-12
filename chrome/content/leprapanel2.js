@@ -17,11 +17,14 @@
 	    sandbox.window = doc.defaultView.window;
 	    sandbox.document = sandbox.window.document;
 	    sandbox.__proto__ = sandbox.window;
+	    
 	    var functionName = 'execute_' + script.name;
 	    var functionText = 'function ' + functionName + script.run.toString().substring(8);
 	    functionText += '; window.lpr2data = ' + JSON.stringify(data) + '; ' + functionName + '(window, document, Zepto);';
     	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.min.js', sandbox, 'UTF–8');
-	    Components.utils.evalInSandbox(functionText, sandbox);
+    	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.extend.js', sandbox, 'UTF–8');
+	    
+    	Components.utils.evalInSandbox(functionText, sandbox);
 	}
 	
 	Lpr2.prototype.serve = function(doc, data) {

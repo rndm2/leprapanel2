@@ -4,6 +4,7 @@
 <overlay id="LepraPanel2-Overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/lib/zepto.min.js" />
+	<script type="application/x-javascript" src="chrome://leprapanel2/content/lib/zepto.extend.js" />
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/leprapanel2.js" />
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/newComments.js" />
 	<script type="application/x-javascript" src="chrome://leprapanel2/content/userscripts/commentAndRatingFont.js" />

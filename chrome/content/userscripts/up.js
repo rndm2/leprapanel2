@@ -16,13 +16,8 @@ lpr2userscript_up.prototype = {
 		style.innerHTML = css;
 		document.body.appendChild(style);
 
-    	var upBlock = $(document.createElement('div')).addClass('lp-up-block')[0];
-
-    	var upLink = $('<input />').attr({
-    		type: 'button',
-    		value: '↑',
-    		onclick: 'new Fx.Scroll(window, {duration: \'short\'}).start(0, 0); this.blur();'
-    	})[0];
+    	var upBlock = $('<div />', {'class': 'lp-up-block'})[0];
+    	var upLink = $('<input />', {type: 'button', value: '↑', onclick: 'new Fx.Scroll(window, {duration: \'short\'}).start(0, 0); this.blur();'})[0];
     	
     	upBlock.appendChild(upLink);
     	document.body.appendChild(upBlock);
@@ -38,11 +33,11 @@ lpr2userscript_up.prototype = {
 	    			$block.fade(document.documentElement.scrollTop > 100 ? 'in' : 'out');
 	    		}, 100);	
 	    	}, false);
+	    	
 	    	var event = new CustomEvent('scroll');
 	    	window.dispatchEvent(event);
 		}
-		var code = 'function LP_upInit' + hostFunction.toString().substring(8);
-		code += '; LP_upInit();';
+		var code = 'function LP_upInit' + hostFunction.toString().substring(8) + '; LP_upInit();';
 		
 		var script = document.createElement('script');
     	script.type = "text/javascript";

@@ -57,12 +57,12 @@ lpr2userscript_newComments.prototype = {
 	    	script.innerHTML = code;
 	    	document.getElementsByTagName('head')[0].appendChild(script);
 	    	
-	    	var navBlock = $('<div class="lp-nc-block" />')[0];
+	    	var navBlock = $('<div />', {'class': 'lp-nc-block'})[0];
 
-	    	navLinkNext = $('<input />').attr({type: 'button', value: '↓', onclick: 'LP_scrollTo(event, this);'})[0];
+	    	navLinkNext = $('<input />', {type: 'button', value: '↓', onclick: 'LP_scrollTo(event, this);'})[0];
 	    	navLinkNext.addEventListener('handleNewComments', function(e) { navigate(1, e.target.getAttribute('lpMode')); });
 	    	
-	    	navLinkPrev = $('<input />').attr({type: 'button', value: '↑', onclick: 'LP_scrollTo(event, this);'})[0];
+	    	navLinkPrev = $('<input />', {type: 'button', value: '↑', onclick: 'LP_scrollTo(event, this);'})[0];
 	    	navLinkPrev.addEventListener('handleNewComments', function(e) { navigate(-1, e.target.getAttribute('lpMode')); });
 
 	    	navBlock.appendChild(navLinkPrev);

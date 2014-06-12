@@ -7,7 +7,7 @@ lpr2userscript_userNumbers.prototype = {
 	include: new RegExp(":\/\/([a-zA-Z0-9]+\.)?leprosorium\.ru"),
 	
 	run: function(window, document, $) {
-		var $wrapper = $('<span class="user-number" />');
+		var $wrapper = $('<span />', {'class': 'user-number'});
 
 		var handleNewHtml = function(e) {
 			var $html = $(e.target);
@@ -28,7 +28,7 @@ lpr2userscript_userNumbers.prototype = {
 	    
 	    makeNumbers();
 	    
-		document.addEventListener("DOMNodeInserted", handleNewHtml, false);
+		document.addEventListener('DOMNodeInserted', handleNewHtml, false);
 	}
 }
 
