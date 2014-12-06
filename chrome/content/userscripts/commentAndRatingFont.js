@@ -8,8 +8,8 @@ lpr2userscript_commentAndRatingFont.prototype = {
 	
 	run: function(window, document, $) {
 		var css = '.c_vote .vote_result { width: auto; min-width: 24px; padding: 0 4px; }' +
-				  '.vote-big-38 .vote_button { right: 2px; }' + 
-				  '.vote-big-48 .vote_button { right: 7px; }';
+				  '.vote-big-38 .vote_button { right: 10px; }' + 
+				  '.vote-big-48 .vote_button { right: 15px; }';
 		
 		var style = document.createElement('style');
 		style.type = 'text/css';
@@ -25,7 +25,7 @@ lpr2userscript_commentAndRatingFont.prototype = {
 				var fontSize = Math.min(16, 9 + Math.round(0.3 * Math.sqrt(Math.abs(rating * 4))));
 				this.style.fontSize = fontSize + 'px';
 				
-				if (fontSize == 16) {
+				if (fontSize >= 15 &&  fontSize <= 16) {
 					if (rating > 999) {
 						this.parentNode.className += ' vote-big-48';
 					} else {

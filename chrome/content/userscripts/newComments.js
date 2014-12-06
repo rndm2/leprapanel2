@@ -24,28 +24,28 @@ lpr2userscript_newComments.prototype = {
 	    	targetEl.setAttribute('lpMode', lpMode);
 			targetEl.dispatchEvent(event);
         	targetEl.blur();
-        	
-        	if (lpMode == 'new') {
-        		var postId = window.__lpPostNewId;
-            	var offset = parseInt(window.__lpPostNewOffset);	
+
+        	if (lpMode === 'new') {
+        		var postId = targetEl.parentNode.getAttribute('__lpPostNewId');
+            	var offset = parseInt(targetEl.parentNode.getAttribute('__lpPostNewOffset'));	
         	} else {
-        		var postId = window.__lpPostMineId;
-            	var offset = parseInt(window.__lpPostMineOffset);
+        		var postId = targetEl.parentNode.getAttribute('__lpPostMineId');
+            	var offset = parseInt(targetEl.parentNode.getAttribute('__lpPostMineOffset'));
         	}
         	
         	var p = $(postId);
         	var f = new Fx.Scroll(window, {duration: 'short'});
         	if (!p || !offset || !f) return;
         	f.start(0, offset);
-        	(function(){
-    			p.childNodes[1].highlight('#f4fbac');
+        	(function() {
+    			p.childNodes[0].highlight('#f4fbac');
     		}).delay(250);
 	    }
 	    var code = 'function LP_scrollTo' + hostFunction.toString().substring(8);
 	    
 	    var $newComments = $('.comment.new', document);
 	    var $mineComments = $('.comment.mine', document);
-	    
+
 	    if ($newComments.length > 0 || $mineComments.length > 0) {
 	    	var style = document.createElement('style');
 	    	style.type = 'text/css';
@@ -60,10 +60,14 @@ lpr2userscript_newComments.prototype = {
 	    	var navBlock = $('<div />', {'class': 'lp-nc-block'})[0];
 
 	    	navLinkNext = $('<input />', {type: 'button', value: '↓', onclick: 'LP_scrollTo(event, this);'})[0];
-	    	navLinkNext.addEventListener('handleNewComments', function(e) { navigate(1, e.target.getAttribute('lpMode')); });
+	    	navLinkNext.addEventListener('handleNewComments', function(e) {
+	    		navigate(navBlock, 1, e.target.getAttribute('lpMode'));
+	    	});
 	    	
 	    	navLinkPrev = $('<input />', {type: 'button', value: '↑', onclick: 'LP_scrollTo(event, this);'})[0];
-	    	navLinkPrev.addEventListener('handleNewComments', function(e) { navigate(-1, e.target.getAttribute('lpMode')); });
+	    	navLinkPrev.addEventListener('handleNewComments', function(e) {
+	    		navigate(navBlock, -1, e.target.getAttribute('lpMode'));
+	    	});
 
 	    	navBlock.appendChild(navLinkPrev);
 	    	navBlock.appendChild(navLinkNext);
@@ -71,21 +75,21 @@ lpr2userscript_newComments.prototype = {
 	    }
 	    
 	    if ($newComments.length > 0) {
-	    	unsafeWindow.__lpPostNewId = $newComments[0].id;
-	    	setOffset($newComments[currentPostNew], 'new');
+	    	navBlock.setAttribute('__lpPostNewId', $newComments[0].id);
+	    	setOffset(navBlock, $newComments[currentPostNew], 'new');
 	    }
 	    
 	    if ($mineComments.length > 0) {
-	    	unsafeWindow.__lpPostMineId = $mineComments[0].id;
-	    	setOffset($mineComments[currentPostMine], 'mine');
+	    	navBlock.setAttribute('__lpPostMineId', $mineComments[0].id);
+	    	setOffset(navBlock, $mineComments[currentPostMine], 'mine');
 	    }
 
-	    function navigate(dir, mode) {
-	    	var currentCounter = (mode == 'new' ? currentPostNew : currentPostMine);
-	    	var $targetComments = (mode == 'new' ? $newComments : $mineComments);
+	    function navigate(navBlock, dir, mode) {
+	    	var currentCounter = (mode === 'new' ? currentPostNew : currentPostMine);
+	    	var $targetComments = (mode === 'new' ? $newComments : $mineComments);
 	    	var commentsLength = $targetComments.length;
 	    	
-	    	if (commentsLength == 0) return;
+	    	if (commentsLength === 0) return;
 	    	
 	    	if (dir > 0) {
 	    		currentCounter++;
@@ -99,18 +103,18 @@ lpr2userscript_newComments.prototype = {
 	    		}
 	    	}
 
-	    	if (mode == 'new') {
+	    	if (mode === 'new') {
 	    		currentPostNew = currentCounter;
-	    		unsafeWindow.__lpPostNewId = $newComments[currentPostNew].id;
+		    	navBlock.setAttribute('__lpPostNewId', $newComments[currentPostNew].id);
 	    	} else {
 	    		currentPostMine = currentCounter;
-	    		unsafeWindow.__lpPostMineId = $mineComments[currentPostMine].id;
+		    	navBlock.setAttribute('__lpPostMineId', $mineComments[currentPostMine].id);
 	    	}
 	    	
-	    	setOffset($targetComments[currentCounter], mode);
+	    	setOffset(navBlock, $targetComments[currentCounter], mode);
 	    }
 	
-	    function setOffset(element, mode) {
+	    function setOffset(navBlock, element, mode) {
 	    	if (!element) return;
     	
 	    	var getOffsetTop = function(el) {
@@ -139,10 +143,10 @@ lpr2userscript_newComments.prototype = {
 	    		htmlTopNew = maxHtmlTop;
 	    	}
 	    	
-	    	if (mode == 'new') {
-	    		unsafeWindow.__lpPostNewOffset = htmlTopNew;
+	    	if (mode === 'new') {
+	    		navBlock.setAttribute('__lpPostNewOffset', htmlTopNew);
 	    	} else {
-	    		unsafeWindow.__lpPostMineOffset = htmlTopNew;
+	    		navBlock.setAttribute('__lpPostMineOffset', htmlTopNew);
 	    	}
     	}
 	}

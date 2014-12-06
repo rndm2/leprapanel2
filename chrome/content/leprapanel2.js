@@ -6,7 +6,7 @@
 	
 	Lpr2.prototype.init = function(list) {
 		for (var i in list) {
-			if (!list.hasOwnProperty(i) || i.search('userscripts.') == -1) continue;
+			if (!list.hasOwnProperty(i) || i.search('userscripts.') === -1) continue;
 			this._enabled[i.replace('userscripts.', '')] = list[i];
 		}
 	}
@@ -19,8 +19,9 @@
 	    sandbox.__proto__ = sandbox.window;
 	    
 	    var functionName = 'execute_' + script.name;
-	    var functionText = 'function ' + functionName + script.run.toString().substring(8);
-	    functionText += '; window.lpr2data = ' + JSON.stringify(data) + '; ' + functionName + '(window, document, Zepto);';
+	    var functionText = 'function ' + functionName + script.run.toString().substring(8) + ';';
+	    functionText += 'window.lpr2data = ' + JSON.stringify(data) + ';';
+	    functionText += 'document.addEventListener("DOMContentLoaded", function() { var t1 = new Date(); ' + functionName + '(window, document, Zepto); console.log("--- ' + script.name + ' run in " + (new Date() - t1) + "ms"); });';
     	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.min.js', sandbox, 'UTF–8');
     	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.extend.js', sandbox, 'UTF–8');
 	    
@@ -30,10 +31,8 @@
 	Lpr2.prototype.serve = function(doc, data) {
 		for (var i = 0; i < this._scripts.length; i++) {
 			var script = this._scripts[i];
-			if (this._enabled[script.name] && this._enabled[script.name] == true && script.include.test(doc.location.href)) {
-					var t1 = new Date();
-					this._evalInSandbox(script, doc, data || {});
-					console.log('--- ' + script.name + ' run in ' + (new Date() - t1) + 'ms');
+			if (this._enabled[script.name] && this._enabled[script.name] === true && script.include.test(doc.location.href)) {
+				this._evalInSandbox(script, doc, data || {});
 			}
 		}
 	}
@@ -185,7 +184,7 @@
 		}
 		
 		if (cookies && cookies.uid && cookies.sid) {
-			if (this.user.uid != cookies.uid || this.user.sid != cookies.sid) {
+			if (this.user.uid !== cookies.uid || this.user.sid !== cookies.sid) {
 				this._ready.uiAuth = false;
 				this.user.logged = true;
 				this.user.changed = true;
@@ -206,13 +205,13 @@
 	Lpr2Bridge.prototype._prepareUI = function() {
 		var barVisible = $(this.config.layout.blocks.bar).length > 0;
 		
-		if (this._ready.uiAuth != true && barVisible == true) {
+		if (this._ready.uiAuth !== true && barVisible === true) {
 			$(this.config.layout.blocks.forLogged).attr('hidden', !this.user.logged);
 			$(this.config.layout.blocks.forNotLogged).attr('hidden', !!this.user.logged);
 			this._ready.uiAuth = true;
 		}
 		
-		if (this._ready.ui != true && barVisible == true && this.user.logged == true) {
+		if (this._ready.ui !== true && barVisible === true && this.user.logged === true) {
 			$(this.config.layout.blocks.greetingBox).attr('hidden', !this.settings.greeting);
 			$(this.config.layout.blocks.ratingBox).attr('hidden', !this.settings.checkRatings);
 			$(this.config.layout.blocks.stuffBox).attr('hidden', !this.settings.checkStuff);
@@ -221,7 +220,7 @@
 		
 		if (this.user.username) {
 			var $profile = $(this.config.layout.elements.profile);
-			if ($profile.attr('data-href').length == 0) {
+			if ($profile.attr('data-href').length === 0) {
 				$profile.attr('data-href', this.config.url.users + this.user.username);	
 			}
 		}
@@ -247,7 +246,7 @@
 			if ($el.length > 0) {
 				if (this.user.attitude.hasOwnProperty(keys[i])) {
 					attitude = this.user.attitude[keys[i]];
-					if (typeof attitude != 'undefined') {
+					if (typeof attitude !== 'undefined') {
 						if (!this.settings.thirdOption) {
 							$(this.config.layout.elements[keys[i]]).attr('src', attitude ? this.config.layout.images.minus : this.config.layout.images.plus);	
 						}
@@ -259,9 +258,9 @@
 						continue;
 					}
 				}
-				if (keys[i] == 'stuff' || keys[i] == 'inbox') {
-					$(this.config.layout.elements[keys[i]]).attr('src', this.user[keys[i]] == '' ? this.config.layout.images[keys[i]] : this.config.layout.images[keys[i] + 'Active']);
-					$el.attr('hidden', this.user[keys[i]] == '');
+				if (keys[i] === 'stuff' || keys[i] === 'inbox') {
+					$(this.config.layout.elements[keys[i]]).attr('src', this.user[keys[i]] === '' ? this.config.layout.images[keys[i]] : this.config.layout.images[keys[i] + 'Active']);
+					$el.attr('hidden', this.user[keys[i]] === '');
 				}
 				$el.val(this.user[keys[i]]);
 			}
@@ -302,11 +301,11 @@
 			this.user.attitude.data = data.karma_votes[data.karma_votes.length - 1];
 			this._storageData = data;			
 		}
-		if (data.hasOwnProperty('karma') && data.karma != this.user.karma) {
+		if (data.hasOwnProperty('karma') && data.karma !== this.user.karma) {
 			this.user.attitude.karma = this.user.karma > data.karma;
 			this.user.karma = data.karma;
 		}
-		if (data.hasOwnProperty('rating') && data.rating != this.user.rating) {
+		if (data.hasOwnProperty('rating') && data.rating !== this.user.rating) {
 			this.user.attitude.rating = this.user.rating > data.rating;
 			this.user.rating = data.rating;
 		}
@@ -326,7 +325,7 @@
 		
 		clearInterval(this._timer);
 		
-		if (this.user.logged != true || (this.settings.checkRatings != true && this.settings.checkStuff != true)) {
+		if (this.user.logged !== true || (this.settings.checkRatings !== true && this.settings.checkStuff !== true)) {
 			return false;
 		}
 		
@@ -371,12 +370,12 @@
 		var found = false;
 		if (palette && palette.children.length > 0) {
 			for (var i = 0; i < palette.children.length; i++) { 
-				if (palette.children[i].id.search(this.config.layout.blocks.bar.replace('#', '')) != -1) {
+				if (palette.children[i].id.search(this.config.layout.blocks.bar.replace('#', '')) !== -1) {
 					found = true;
 				}
 			}
 		}
-		if (found == false) {
+		if (found === false) {
 			this._ready.ui = false;
 			this._ready.uiAuth = false;
 			this._runLevel0();
@@ -393,7 +392,7 @@
 				break;
 			case 'nsPref:changed':
 				this._loadPreferences();
-				if (aData.search('userscripts') != -1) {
+				if (aData.search('userscripts') !== -1) {
 					this._lpr2Instance.init(this.settings);
 				} else {
 					this._ready.ui = false;
@@ -421,7 +420,7 @@
 	}
 	
 	Lpr2Bridge.prototype._getStuffInboxFromHtml = function(doc) {
-		if (doc.location.href.search('//leprosorium.ru') == -1) return false;
+		if (doc.location.href.search('//leprosorium.ru') === -1) return false;
 		var $stuff = $('#js-header_nav_my_things i', doc);
 		var $inbox = $('#js-header_nav_inbox i', doc);
 		if ($stuff.length > 0 && $inbox.length > 0) {
@@ -451,7 +450,7 @@
 			do { 
 				read = cstream.readString(0xffffffff, str);
 				data += str.value;
-			} while (read != 0);
+			} while (read !== 0);
 		}
 		cstream.close();
 		

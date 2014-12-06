@@ -9,7 +9,7 @@ lpr2userscript_goodLatvia.prototype = {
 	run: function(window, document, $) {
 		var $latvia = $('#js-profile_latvian');
 		
-		if ($latvia.length == 0) return;
+		if ($latvia.length === 0) return;
 		
 		$latvia.css({opacity: 0, visibility: 'hidden'});
 		
