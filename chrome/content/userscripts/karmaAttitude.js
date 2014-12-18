@@ -22,8 +22,8 @@ lpr2userscript_karmaAttitude.prototype = {
 		var $stat = $('<div />', {'class': 'b-user_stat', css: {width: '100%', clear: 'both'}});
 		var $icon = $('<i />', {'class': 'b-icon b-icon__arrow_point'});
 		
-		var userId = $userIdHolder[0].innerHTML.match(/[0-9]+/)[0];
-		var userGender = $userGenderHolder[0].innerHTML.search('Написала') === -1 ? 'male' : 'female';
+		var userId = $userIdHolder[0].textContent.match(/[0-9]+/)[0];
+		var userGender = $userGenderHolder[0].textContent.search('Написала') === -1 ? 'male' : 'female';
 		var text = strings[userGender][0];
 		
 		if (userId === lpr2data.uid) return;

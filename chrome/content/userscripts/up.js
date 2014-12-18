@@ -13,7 +13,7 @@ lpr2userscript_up.prototype = {
 		
 		var style = document.createElement('style');
 		style.type = 'text/css';
-		style.innerHTML = css;
+		style.textContent = css;
 		document.body.appendChild(style);
 
     	var upBlock = $('<div />', {'class': 'lp-up-block'})[0];
@@ -41,7 +41,7 @@ lpr2userscript_up.prototype = {
 		
 		var script = document.createElement('script');
     	script.type = "text/javascript";
-    	script.innerHTML = code;
+    	script.textContent = code;
     	document.getElementsByTagName('head')[0].appendChild(script);
 	}
 }

@@ -49,12 +49,12 @@ lpr2userscript_newComments.prototype = {
 	    if ($newComments.length > 0 || $mineComments.length > 0) {
 	    	var style = document.createElement('style');
 	    	style.type = 'text/css';
-	    	style.innerHTML = css;
+	    	style.textContent = css;
 	    	document.body.appendChild(style);
 	    	
 	    	var script = document.createElement('script');
 	    	script.type = "text/javascript";
-	    	script.innerHTML = code;
+	    	script.textContent = code;
 	    	document.getElementsByTagName('head')[0].appendChild(script);
 	    	
 	    	var navBlock = $('<div />', {'class': 'lp-nc-block'})[0];

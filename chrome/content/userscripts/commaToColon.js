@@ -19,7 +19,7 @@ lpr2userscript_commaToColon.prototype = {
 
 	    var script = document.createElement('script'); 
 	    script.type = "text/javascript"; 
-	    script.innerHTML = '(' + commaToColon.toString() + ')()';
+	    script.textContent = '(' + commaToColon.toString() + ')()';
 	    document.getElementsByTagName('head')[0].appendChild(script);
 	}
 }

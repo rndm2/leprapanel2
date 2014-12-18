@@ -11,7 +11,7 @@ lpr2userscript_transparentImages.prototype = {
 
 		 var style = document.createElement('style');
 		 style.type = 'text/css';
-		 style.innerHTML = css;
+		 style.textContent = css;
 		 document.body.appendChild(style);
 	}
 }
