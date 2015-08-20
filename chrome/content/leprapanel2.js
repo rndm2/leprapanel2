@@ -21,7 +21,7 @@
 	    var functionName = 'execute_' + script.name;
 	    var functionText = 'function ' + functionName + script.run.toString().substring(8) + ';';
 	    functionText += 'window.lpr2data = ' + JSON.stringify(data) + ';';
-	    functionText += 'document.addEventListener("DOMContentLoaded", function() { var t1 = new Date(); ' + functionName + '(window, document, Zepto); console.log("--- ' + script.name + ' run in " + (new Date() - t1) + "ms"); });';
+	    functionText += 'document.addEventListener("DOMContentLoaded", function() { var t1 = new Date(); ' + functionName + '(window, document, Zepto); window.console.log("--- ' + script.name + ' run in " + (new Date() - t1) + "ms"); });';
     	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.min.js', sandbox, 'UTF–8');
     	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.extend.js', sandbox, 'UTF–8');
 	    

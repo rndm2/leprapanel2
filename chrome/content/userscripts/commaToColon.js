@@ -8,19 +8,34 @@ lpr2userscript_commaToColon.prototype = {
 	
 	run: function(window, document, $) {
 
-		var commaToColon = function() {
-			// todo: Try to find best way 
-			var source = window.commentForm.prototype.show.toString()
-	        				.replace("this.container.getElement('textarea').value = this.options.comment_user_name ? this.options.comment_user_name + ', ' : '';",
-	        						 "this.container.getElement('textarea').value = this.options.comment_user_name ? this.options.comment_user_name + ': ' : '';"
-	        				);
-			eval('window.commentForm.prototype.show = ' + source);
+		var handleNewHtml = function(e) {
+			$('.c_answer', e ? e.target : document).each(function() {
+				var handler = function(e) {
+					var $textarea = $(this).closest('.comment').find('.b-comments_add_textarea textarea');
+					
+					if ($textarea.length === 0 || $textarea.attr('data-processed')) {
+						return;
+					}
+					
+					var text = $textarea.val();
+					
+					if (text && text.search(/[\wа-яА-Я]+,/) === 0) {
+						var splitted = text.split(/,\s$/);
+						if (splitted.length > 0) {
+							$textarea.val(splitted[0] + ': ').attr('data-processed', true);	
+						}
+					}
+		    	};
+				
+				this.addEventListener('click', handler);
+				this.addEventListener('mousemove', handler);
+				this.addEventListener('mouseout', handler);
+			});	
 		};
-
-	    var script = document.createElement('script'); 
-	    script.type = "text/javascript"; 
-	    script.textContent = '(' + commaToColon.toString() + ')()';
-	    document.getElementsByTagName('head')[0].appendChild(script);
+		
+		handleNewHtml();
+		
+		document.addEventListener('DOMNodeInserted', handleNewHtml, false);
 	}
 }
 
