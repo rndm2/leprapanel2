@@ -19,7 +19,7 @@ lpr2userscript_commaToColon.prototype = {
 					
 					var text = $textarea.val();
 					
-					if (text && text.search(/[\wа-яА-Я]+,/) === 0) {
+					if (text && text.search(/[\wа-яА-Я-]+,/) === 0) {
 						var splitted = text.split(/,\s$/);
 						if (splitted.length > 0) {
 							$textarea.val(splitted[0] + ': ').attr('data-processed', true);	
