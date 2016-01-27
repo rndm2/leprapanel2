@@ -445,13 +445,13 @@
 		fstream.init(this._fileService, -1, 0, 0);
 		cstream.init(fstream, 'UTF-8', 0, 0);
 
-		let (str = {}) {
-			let read = 0;
-			do { 
-				read = cstream.readString(0xffffffff, str);
-				data += str.value;
-			} while (read !== 0);
-		}
+		var str = {};
+		var read = 0;
+		do { 
+			read = cstream.readString(0xffffffff, str);
+			data += str.value;
+		} while (read !== 0);
+
 		cstream.close();
 		
 		this._storageData = JSON.parse(data);
