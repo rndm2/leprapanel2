@@ -81,7 +81,7 @@
 			id: 'leprapanel2@random.net.ua',
 			url: {
 				domain: 'leprosorium.ru',
-				api: 'https://leprosorium.ru/api/lepropanel',
+				api: 'https://leprosorium.ru/ajax/api/lepropanel',
 				users: 'https://leprosorium.ru/users/'
 			},
 			pattern: {
