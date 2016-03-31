@@ -13,6 +13,7 @@ lpr2userscript_placeKarmaButtons.prototype = {
 			document.removeEventListener('DOMNodeInserted', handleNewHtml);
 
 			$('.b-user_votes_wrapper').addClass('karma-processed');
+			$('.b-user_votes_wrapper').css('top', '30px');
 			$('.b-karma_controls').css('display', 'block');
 			$('.b-karma_value').css('display', 'block');
 			$('.b-karma_controls').eq(0).insertAfter($('.b-karma_controls').eq(1));
