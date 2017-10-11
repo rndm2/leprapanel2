@@ -7,20 +7,4 @@
     <setting pref="extensions.leprapanel2.checkStuff" title="Проверять мои вещи и инбокс" type="bool"></setting>
     <setting pref="extensions.leprapanel2.checkLepra" title="Проверять мои вещи и инбокс чаще" type="bool">Если включено будет проверять мои вещи и инбокс при каждом просмотре любой страницы лепры не отправляя дополнительного запроса</setting>
     <setting pref="extensions.leprapanel2.checkPeriod" title="Период обновления (мин):" type="integer">Можно попробовать установить в ноль</setting>
-    
-    <setting title="Настройки юзерскриптов" type="control" style="margin-top: 50px; border: 0; font-weight: bold"></setting>
-    <setting pref="extensions.leprapanel2.userscripts.commentAndRatingFont" title="Шрифт рейтинга комментариев" type="bool">Изменяет размер и цвет шрифта рейтинга комментариев</setting>
-    <setting pref="extensions.leprapanel2.userscripts.newComments" title="Кнопки навигации" type="bool">Добавляет кнопки со стрелками вверх/вниз для перемещения на предыдущий/следующий новый/свой комментарий. Работает внутри постов и инбоксов. Для перемещения только по своим комментариям нужно зажать Shift или Ctrl.</setting>
-    <setting pref="extensions.leprapanel2.userscripts.transparentImages" title="Полупрозрачные картинки" type="bool">Все приложенные картинки отображаются прозрачными (на 75%, если точнее), и приобретают нормальный облик при наведении на них мышкой. Бывает очень полезно для экстремального чтения лепры, особенно в офисе, особенно в пятницу. Работает внутри постов и инбоксов.</setting>
-    <setting pref="extensions.leprapanel2.userscripts.commaToColon" title="Заменять запятую на двоеточие в ответах на комментарии" type="bool">Заменяет запятую на двоеточие при ответах на комментарии так как это было на старой лепре.</setting>
-    <setting pref="extensions.leprapanel2.userscripts.userNumbers" title="Верните номера" type="bool">Показывает номера пользователей рядом с юзернеймом.</setting>
-    <setting pref="extensions.leprapanel2.userscripts.leproTotalComments" title="LeproTotalComments" type="bool" disabled="true">Расширенный фильтр комментариев</setting>
-    <setting pref="extensions.leprapanel2.userscripts.eraseFromStuff" title="Стереть из моих вещей" type="bool">Меняет "из моих вещей" на "стереть из моих вещей" как было раньше</setting>
-    <setting pref="extensions.leprapanel2.userscripts.karmaAttitude" title="Изменения кармы" type="bool">При заходе в чужой профиль показывает срал ли вам юзернейм в карму и каким образом</setting>
-    <setting pref="extensions.leprapanel2.userscripts.goodLatvia" title="Пофиксить профили латышей" type="bool">Для латышей не будет огромной чёрной конины в профиле на весь экран, вместо этого аккуратная ссылка под юзернеймом, которая и покажет конину</setting>
-    <setting pref="extensions.leprapanel2.userscripts.placeKarmaButtons" title="Поставить кнопки кармы на место" type="bool">Всю жизнь плюсики были сверху, а минусики снизу и тут хуяк и кто-то решил иначе. Скрипт уберет уёбищность плюсиков-минусиков в профиле пользователя.</setting>
-    <setting pref="extensions.leprapanel2.userscripts.hideCitizenship" title="Скрыть надпись о гражданстве в профиле" type="bool">Спасибо, скройте мне пожалуйста. На хую я вертел такой маркетинг.</setting>
-    <setting pref="extensions.leprapanel2.userscripts.up" title="Кнопка наверх" type="bool">Добавляет кнопку наверх на всех страницах сайта</setting>
-    <setting pref="extensions.leprapanel2.userscripts.preview" title="Превью комментариев" type="bool" disabled="true">Кнопнка рядом с "YARRR!" которая позволяет посмотреть как будет выглядеть комментарий после постинга</setting>
-    <setting pref="extensions.leprapanel2.userscripts.obfuscate" title="Отключить автозамены" type="bool" disabled="true">Отключить автозамены в моих комментариях и постах</setting>
 </vbox>

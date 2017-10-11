@@ -1,42 +1,4 @@
 (function($, window, document) {
-	var Lpr2 = function() {
-		this._scripts = [];
-		this._enabled = {};
-	}
-	
-	Lpr2.prototype.init = function(list) {
-		for (var i in list) {
-			if (!list.hasOwnProperty(i) || i.search('userscripts.') === -1) continue;
-			this._enabled[i.replace('userscripts.', '')] = list[i];
-		}
-	}
-	
-	Lpr2.prototype._evalInSandbox = function(script, doc, data) {
-		var sandbox = new Components.utils.Sandbox(doc.defaultView);
-	    sandbox.unsafeWindow = doc.defaultView.window.wrappedJSObject;
-	    sandbox.window = doc.defaultView.window;
-	    sandbox.document = sandbox.window.document;
-	    sandbox.__proto__ = sandbox.window;
-	    
-	    var functionName = 'execute_' + script.name;
-	    var functionText = 'function ' + functionName + script.run.toString().substring(8) + ';';
-	    functionText += 'window.lpr2data = ' + JSON.stringify(data) + ';';
-	    functionText += 'document.addEventListener("DOMContentLoaded", function() { var t1 = new Date(); ' + functionName + '(window, document, Zepto); window.console.log("--- ' + script.name + ' run in " + (new Date() - t1) + "ms"); });';
-    	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.min.js', sandbox, 'UTF–8');
-    	Services.scriptloader.loadSubScript('chrome://leprapanel2/content/lib/zepto.extend.js', sandbox, 'UTF–8');
-	    
-    	Components.utils.evalInSandbox(functionText, sandbox);
-	}
-	
-	Lpr2.prototype.serve = function(doc, data) {
-		for (var i = 0; i < this._scripts.length; i++) {
-			var script = this._scripts[i];
-			if (this._enabled[script.name] && this._enabled[script.name] === true && script.include.test(doc.location.href)) {
-				this._evalInSandbox(script, doc, data || {});
-			}
-		}
-	}
-	
 	var Lpr2Bridge = function() {
 		
 		this._preferencesService = undefined;
@@ -45,8 +7,6 @@
 		this._fileService = undefined;
 		
 		this._storageData = {};
-		
-		this._lpr2Instance = new Lpr2();
 		
 		this._timer = undefined;
 		
@@ -135,8 +95,6 @@
 		this._fileService = FileUtils.getFile("ProfD", ["leprapanel2.json"]);
 		
 		this._loadPreferences();
-
-		this._lpr2Instance.init(this.settings);
 		
 		this._getSession();
 		this._runLevel0();
@@ -351,7 +309,6 @@
 	
 	Lpr2Bridge.prototype._registerObservers = function() {
 		var _this = this;
-	    this._preferencesService.QueryInterface(Components.interfaces.nsIPrefBranch2);
 	    this._preferencesService.addObserver('', this, false);
 	    this._preferencesService.QueryInterface(Components.interfaces.nsIPrefBranch);
 	    this._observerService.addObserver(this, "cookie-changed", null);
@@ -390,15 +347,6 @@
 					this._runLevel0();
 				}
 				break;
-			case 'nsPref:changed':
-				this._loadPreferences();
-				if (aData.search('userscripts') !== -1) {
-					this._lpr2Instance.init(this.settings);
-				} else {
-					this._ready.ui = false;
-					this._runLevel0();	
-				}				
-				break;
 		}
 	}
 	
@@ -412,7 +360,6 @@
 	Lpr2Bridge.prototype._onPageLoad = function(e) {
 		var doc = e.target;
 		if (doc instanceof HTMLDocument && !doc.defaultView.frameElement && doc.location.href) {
-			this._lpr2Instance.serve(doc, $.extend(this._storageData, this.user));
 			if (this.settings.checkLepra) {
 				this._getStuffInboxFromHtml(doc);
 			}
